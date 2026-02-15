@@ -140,21 +140,6 @@ function DockItem({
     damping: 24,
     mass: 0.25,
   })
-  const labelOpacity = useSpring(useTransform(distance, [-140, 0, 140], [0, 1, 0]), {
-    stiffness: 260,
-    damping: 24,
-    mass: 0.25,
-  })
-  const labelY = useSpring(useTransform(distance, [-140, 0, 140], [8, 0, 8]), {
-    stiffness: 260,
-    damping: 24,
-    mass: 0.25,
-  })
-  const labelColor = useTransform(
-    distance,
-    [-140, 0, 140],
-    ["rgba(255, 255, 255, 0.62)", "rgba(255, 244, 214, 1)", "rgba(255, 255, 255, 0.62)"]
-  )
 
   const dotScale = useMemo(() => (active ? 1 : 0.4), [active])
   const dotOpacity = useMemo(() => (active ? 1 : 0.3), [active])
@@ -164,6 +149,7 @@ function DockItem({
       ref={ref}
       href={href}
       aria-label={label}
+      title={label}
       className="relative z-10 block text-white"
     >
       <motion.span
@@ -183,12 +169,6 @@ function DockItem({
           className="absolute left-1/2 -translate-x-1/2 -bottom-2 h-1.5 w-1.5 rounded-full bg-white"
         />
       </motion.div>
-      <motion.span
-        style={{ opacity: labelOpacity, color: labelColor, y: labelY }}
-        className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-full mt-3 text-[11px] font-medium tracking-wide whitespace-nowrap drop-shadow-[0_1px_6px_rgba(255,241,209,0.35)]"
-      >
-        {label}
-      </motion.span>
     </a>
   )
 }
