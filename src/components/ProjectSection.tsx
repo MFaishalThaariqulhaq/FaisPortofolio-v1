@@ -1,0 +1,163 @@
+"use client"
+
+import { motion, useInView, useReducedMotion } from "framer-motion"
+import { useRef } from "react"
+
+const PROJECT_LINK = "#"
+const PREFIX = "Check out the"
+const EMPHASIS = "project"
+const SUFFIX = "here"
+
+export default function ProjectSection() {
+  const sectionRef = useRef<HTMLElement | null>(null)
+  const ctaRef = useRef<HTMLAnchorElement | null>(null)
+  const reduceMotion = useReducedMotion()
+  const isInView = useInView(sectionRef, { once: false, amount: 0.55 })
+
+  return (
+    <section
+      id="project"
+      ref={sectionRef}
+      className="min-h-screen bg-[#070b14] text-white px-6 md:px-16 py-24 flex items-center"
+    >
+      <div className="mx-auto w-full max-w-6xl">
+        <p className="text-sm uppercase tracking-[0.2em] text-white/60">Projects</p>
+        <motion.a
+          ref={ctaRef}
+          href={PROJECT_LINK}
+          className="group mt-8 inline-block select-none"
+          aria-label="Check out the project here"
+          initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -60, filter: "blur(6px)" }}
+          animate={
+            isInView
+              ? { opacity: 1, y: 0, filter: "blur(0px)" }
+              : reduceMotion
+                ? { opacity: 0 }
+                : { opacity: 0, y: -60, filter: "blur(6px)" }
+          }
+          transition={
+            reduceMotion
+              ? { duration: 0.35, ease: "easeOut" }
+              : { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
+          }
+        >
+          <span className="text-[clamp(2.1rem,7vw,6.5rem)] leading-[1.05] font-semibold tracking-tight text-white/92">
+            <AnimatedText
+              text={PREFIX}
+              baseDelay={0}
+              reduceMotion={reduceMotion}
+              isInView={isInView}
+            />
+            <span className="inline-block w-[0.45em]" />
+            <span className="group/emphasis relative inline-block">
+              <span className="relative z-10 inline-block overflow-hidden">
+                <AnimatedText
+                  text={EMPHASIS}
+                  baseDelay={180}
+                  reduceMotion={reduceMotion}
+                  isInView={isInView}
+                  expressive
+                  className="transition-[filter,opacity,letter-spacing] duration-300 ease-out brightness-100 group-hover:brightness-110 group-hover:tracking-[0.02em]"
+                />
+                <span
+                  className="pointer-events-none absolute left-0 top-1/2 h-[2px] w-full -translate-y-1/2 bg-gradient-to-r from-transparent via-white/90 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                >
+                  <span
+                    className={`absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent ${
+                      reduceMotion
+                        ? ""
+                        : "-translate-x-[120%] transition-transform duration-500 ease-out group-hover:translate-x-[120%]"
+                    }`}
+                  />
+                </span>
+              </span>
+              <svg
+                viewBox="0 0 220 90"
+                preserveAspectRatio="none"
+                className="pointer-events-none absolute -left-[10%] -top-[28%] h-[1.7em] w-[125%] text-[#3a7dff]/95"
+              >
+                <path
+                  d="M15 47 C 40 10, 165 8, 205 40 C 213 48, 214 63, 196 72 C 148 92, 52 86, 23 64"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="6"
+                  strokeLinecap="round"
+                  className="opacity-0 stroke-dasharray-[560] stroke-dashoffset-[560] transition-all duration-700 ease-out group-hover:opacity-100 group-hover:stroke-dashoffset-0"
+                />
+                <path
+                  d="M70 20 C 118 6, 168 14, 184 26"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="5"
+                  strokeLinecap="round"
+                  className="opacity-0 stroke-dasharray-[200] stroke-dashoffset-[200] transition-all duration-500 delay-100 ease-out group-hover:opacity-100 group-hover:stroke-dashoffset-0"
+                />
+              </svg>
+            </span>
+            <span className="inline-block w-[0.45em]" />
+            <AnimatedText
+              text={SUFFIX}
+              baseDelay={340}
+              reduceMotion={reduceMotion}
+              isInView={isInView}
+            />
+          </span>
+        </motion.a>
+      </div>
+    </section>
+  )
+}
+
+function AnimatedText({
+  text,
+  baseDelay = 0,
+  reduceMotion,
+  isInView,
+  expressive = false,
+  className = "",
+}: {
+  text: string
+  baseDelay?: number
+  reduceMotion?: boolean
+  isInView?: boolean
+  expressive?: boolean
+  className?: string
+}) {
+  return (
+    <span className={`inline-flex ${className}`}>
+      {text.split("").map((char, index) => (
+        <motion.span
+          key={`${text}-${index}`}
+          initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -90, filter: "blur(8px)" }}
+          animate={
+            isInView
+              ? reduceMotion
+                ? { opacity: 1 }
+                : { opacity: 1, y: 0, filter: "blur(0px)" }
+              : reduceMotion
+                ? { opacity: 0 }
+                : { opacity: 0, y: -90, filter: "blur(8px)" }
+          }
+          transition={{
+            duration: reduceMotion ? 0.2 : 0.52,
+            ease: [0.22, 1, 0.36, 1],
+            delay: (baseDelay + index * 26) / 1000,
+          }}
+          className={`inline-block transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            reduceMotion ? "" : "group-hover:-translate-y-[0.14em]"
+          } ${
+            expressive && !reduceMotion
+              ? index % 2 === 0
+                ? "group-hover:rotate-[-2deg]"
+                : "group-hover:rotate-[2deg]"
+              : ""
+          } ${
+            char === " " ? "w-[0.34em]" : ""
+          }`}
+        >
+          {char === " " ? "\u00A0" : char}
+        </motion.span>
+      ))}
+    </span>
+  )
+}
