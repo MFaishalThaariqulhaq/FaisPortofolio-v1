@@ -30,7 +30,7 @@ html[data-theme="light"] {
   --accent-2: #2563eb;
   --accent-soft: rgba(37, 99, 235, 0.2);
   --glow-accent: rgba(37, 99, 235, 0.35);
-  --splash-bg: #02060f;
+  --splash-bg: #edf2f9;
   color-scheme: light;
 }
 
@@ -60,6 +60,22 @@ body {
 
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
+  display: none;
+}
+
+html[data-theme="dark"] .theme-icon-light {
+  display: none;
+}
+
+html[data-theme="dark"] .theme-icon-dark {
+  display: block;
+}
+
+html[data-theme="light"] .theme-icon-light {
+  display: block;
+}
+
+html[data-theme="light"] .theme-icon-dark {
   display: none;
 }
 

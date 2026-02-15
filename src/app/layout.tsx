@@ -23,10 +23,8 @@ const themeInitScript = `
   try {
     const key = "fais_theme";
     const stored = localStorage.getItem(key);
-    const mode = stored === "light" || stored === "dark" || stored === "system" ? stored : "dark";
-    const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const applied = mode === "system" ? (isDark ? "dark" : "light") : mode;
-    document.documentElement.setAttribute("data-theme", applied);
+    const mode = stored === "light" || stored === "dark" ? stored : "dark";
+    document.documentElement.setAttribute("data-theme", mode);
   } catch {
     document.documentElement.setAttribute("data-theme", "dark");
   }
