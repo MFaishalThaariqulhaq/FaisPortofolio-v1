@@ -270,7 +270,7 @@ export default function Hero() {
           transition={{ delay: 0.5 }}
           className="mt-4 text-base text-[var(--text-secondary)] md:text-lg"
         >
-          Frontend Developer | TypeScript Enthusiast
+          Website Developer | Mobile Enthusiast | Ai Enthusiast
         </motion.p>
 
         <motion.div
