@@ -29,3 +29,15 @@ html {
   scroll-behavior: auto;
 }
 
+html,
+body {
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
+
