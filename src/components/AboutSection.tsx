@@ -10,15 +10,12 @@ export default function AboutSection() {
   const photoCardRef = useRef<HTMLDivElement | null>(null)
   const [isDesktopPointer, setIsDesktopPointer] = useState(false)
   const [reduceMotion, setReduceMotion] = useState(false)
-  const [showTapHint, setShowTapHint] = useState(false)
   const lampX = useMotionValue(0)
   const lampY = useMotionValue(0)
   const lampCardX = useMotionValue(0)
   const lampCardY = useMotionValue(0)
 
-  const darknessMask = useMotionTemplate`radial-gradient(430px circle at ${lampX}px ${lampY}px, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 22%, rgba(0, 0, 0, 0.7) 42%, rgba(0, 0, 0, 0.96) 62%, rgba(0, 0, 0, 0.995) 100%)`
-  const lampGlow = useMotionTemplate`radial-gradient(650px circle at ${lampX}px ${lampY}px, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.1) 28%, rgba(255, 255, 255, 0.04) 44%, rgba(255, 255, 255, 0) 78%)`
-  const photoRevealMask = useMotionTemplate`radial-gradient(230px circle at ${lampCardX}px ${lampCardY}px, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.9) 34%, rgba(255, 255, 255, 0.35) 56%, rgba(0, 0, 0, 0) 78%)`
+  const photoRevealMask = useMotionTemplate`radial-gradient(250px circle at ${lampCardX}px ${lampCardY}px, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.92) 38%, rgba(255, 255, 255, 0.46) 63%, rgba(0, 0, 0, 0) 84%)`
   const isLeftInView = useInView(leftRef, { once: false, amount: 0.45 })
   const isRightInView = useInView(rightRef, { once: false, amount: 0.35 })
 
@@ -76,20 +73,6 @@ export default function AboutSection() {
     }
   }, [centerLamp])
 
-  useEffect(() => {
-    if (isDesktopPointer) {
-      setShowTapHint(false)
-      return
-    }
-
-    setShowTapHint(true)
-    const timer = window.setTimeout(() => {
-      setShowTapHint(false)
-    }, 2800)
-
-    return () => window.clearTimeout(timer)
-  }, [isDesktopPointer])
-
   const handlePointerMove = (event: PointerEvent<HTMLElement>) => {
     if (!isDesktopPointer) return
     setLampByClient(event.clientX, event.clientY)
@@ -98,7 +81,6 @@ export default function AboutSection() {
   const handlePointerDown = (event: PointerEvent<HTMLElement>) => {
     if (isDesktopPointer) return
     setLampByClient(event.clientX, event.clientY)
-    setShowTapHint(false)
   }
 
   const handlePointerLeave = () => {
@@ -112,7 +94,7 @@ export default function AboutSection() {
       onPointerMove={handlePointerMove}
       onPointerDown={handlePointerDown}
       onPointerLeave={handlePointerLeave}
-      className="relative flex min-h-screen items-center overflow-hidden bg-[var(--bg-page)] px-6 py-24 text-[var(--text-primary)] md:px-16"
+      className="relative flex min-h-screen items-center overflow-hidden bg-[var(--bg-surface)] px-6 py-24 text-[var(--text-primary)] md:px-16"
     >
       <div className="relative z-0 mx-auto grid w-full max-w-6xl items-center gap-10 md:grid-cols-2">
         <motion.div
@@ -153,41 +135,17 @@ export default function AboutSection() {
           ref={photoCardRef}
           className="relative aspect-[4/3] w-full max-w-[560px] overflow-hidden rounded-3xl border border-[var(--border-subtle)] shadow-[0_20px_70px_rgba(0,0,0,0.35)] md:aspect-[5/4]"
           >
-            <div className="absolute inset-0 bg-[linear-gradient(160deg,var(--bg-elev)_0%,var(--bg-surface)_46%,var(--bg-page)_100%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(160deg,var(--bg-surface)_0%,var(--bg-elev)_48%,var(--bg-page)_100%)]" />
             <div className="absolute inset-0 bg-[url('/about-photo.jpg')] bg-cover bg-center" />
             <motion.div
               aria-hidden="true"
               style={{ WebkitMaskImage: photoRevealMask, maskImage: photoRevealMask }}
               className="absolute inset-0 bg-[url('/about-photo.jpg')] bg-cover bg-center"
             />
-            <div className="absolute inset-0 bg-black/20" />
+            <div className="absolute inset-0 bg-white/5" />
           </div>
         </motion.div>
       </div>
-
-      <motion.div
-        aria-hidden="true"
-        style={{ background: darknessMask }}
-        className="pointer-events-none absolute inset-0 z-20"
-      />
-      <motion.div
-        aria-hidden="true"
-        style={{ background: lampGlow }}
-        animate={reduceMotion ? undefined : { opacity: [0.8, 0.9, 0.8] }}
-        transition={reduceMotion ? undefined : { duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-        className="pointer-events-none absolute inset-0 z-30"
-      />
-      {!isDesktopPointer && showTapHint && (
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 6 }}
-          transition={{ duration: 0.25, ease: "easeOut" }}
-          className="pointer-events-none absolute bottom-8 left-1/2 z-40 -translate-x-1/2 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-page)]/70 px-4 py-2 text-xs font-medium tracking-wide text-[var(--text-primary)]/90 backdrop-blur-md"
-        >
-          Tap untuk menyorot area
-        </motion.div>
-      )}
     </section>
   )
 }

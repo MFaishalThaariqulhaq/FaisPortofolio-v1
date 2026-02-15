@@ -39,7 +39,7 @@ export default function SmoothScroll() {
       if (!section) return
 
       event.preventDefault()
-      lenis.scrollTo(section, { duration: 0.95, offset: -16 })
+      lenis.scrollTo(section, { duration: 0.95, offset: 0 })
     }
 
     const onWheel = (event: WheelEvent) => {
@@ -71,7 +71,7 @@ export default function SmoothScroll() {
 
       event.preventDefault()
       lastSnapAt = now
-      lenis.scrollTo(sections[nextIndex], { duration: 0.85, offset: -16 })
+      lenis.scrollTo(sections[nextIndex], { duration: 0.85, offset: 0 })
     }
 
     document.addEventListener("click", onHashLinkClick)
