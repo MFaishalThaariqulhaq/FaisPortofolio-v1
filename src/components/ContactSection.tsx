@@ -60,9 +60,9 @@ export default function ContactSection() {
     <section
       id="contact"
       ref={sectionRef}
-      className="min-h-screen bg-[#070b14] text-white px-6 md:px-16 py-24 flex items-center"
+      className="flex min-h-screen items-center bg-[var(--bg-surface)] px-6 py-24 text-[var(--text-primary)] md:px-16"
     >
-      <div className="mx-auto w-full max-w-6xl grid gap-12 lg:grid-cols-[1fr_1fr] items-center">
+      <div className="mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[1fr_1fr]">
         <motion.div
           ref={leftRef}
           initial={reduceMotion ? undefined : { opacity: 0, y: 18 }}
@@ -75,22 +75,22 @@ export default function ContactSection() {
           }
           transition={{ duration: 0.5, ease: "easeOut" }}
         >
-          <h2 className="text-[clamp(2.3rem,7vw,6rem)] leading-[1.03] font-semibold tracking-tight text-white/95">
+          <h2 className="text-[clamp(2.3rem,7vw,6rem)] font-semibold leading-[1.03] tracking-tight text-[var(--text-primary)]/95">
             Get In Touch
           </h2>
 
           <div className="mt-5">
-            <span className="block h-[4px] w-20 rounded-full bg-[#2f405e]" />
-            <span className="mt-2 ml-8 block h-[4px] w-24 rounded-full bg-[#2f405e]" />
+            <span className="block h-[4px] w-20 rounded-full bg-[var(--accent-soft)]" />
+            <span className="mt-2 ml-8 block h-[4px] w-24 rounded-full bg-[var(--accent-soft)]" />
           </div>
 
-          <p className="mt-9 max-w-xl text-[clamp(1rem,2.1vw,1.9rem)] leading-relaxed text-white/65">
+          <p className="mt-9 max-w-xl text-[clamp(1rem,2.1vw,1.9rem)] leading-relaxed text-[var(--text-secondary)]">
             Feel free to contact me if you have any questions or just want to say hi.
           </p>
 
           <a
             href={`mailto:${CONTACT_EMAIL}`}
-            className="mt-9 inline-block text-xl md:text-3xl text-white/78 transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 rounded-md"
+            className="mt-9 inline-block rounded-md text-xl text-[var(--text-secondary)] transition-colors duration-200 hover:text-[var(--text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-2)] md:text-3xl"
           >
             {CONTACT_EMAIL}
           </a>
@@ -115,7 +115,7 @@ export default function ContactSection() {
           transition={{ duration: 0.55, ease: "easeOut", delay: 0.05 }}
           className="relative"
         >
-          <div className="aspect-[4/3] w-full overflow-hidden border border-white/12 bg-[#111827]">
+          <div className="aspect-[4/3] w-full overflow-hidden border border-[var(--border-subtle)] bg-[var(--bg-elev)]">
             <div
               className="h-full w-full bg-cover bg-center grayscale contrast-125"
               style={{ backgroundImage: `url('${CONTACT_IMAGE_SRC}')` }}
@@ -156,7 +156,7 @@ function SocialIconButton({
       title={`${item.label}: ${item.value}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="group inline-flex h-[68px] w-[68px] items-center justify-center rounded-full bg-[#334155] text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/85"
+      className="group inline-flex h-[68px] w-[68px] items-center justify-center rounded-full bg-[var(--bg-elev)] text-[var(--text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-2)]"
     >
       <motion.span
         animate={baseAnimation}
@@ -171,13 +171,13 @@ function SocialIconButton({
         />
         <span className="pointer-events-none absolute inset-0 rounded-full bg-white/20 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
         {item.type === "mail" && (
-          <svg viewBox="0 0 24 24" className="h-7 w-7 text-white">
+          <svg viewBox="0 0 24 24" className="h-7 w-7 text-[var(--text-primary)]">
             <rect x="3.5" y="5.5" width="17" height="13" rx="2.5" className={iconStrokeClass} />
             <path d="M4.5 7l7.5 6 7.5-6" className={iconStrokeClass} />
           </svg>
         )}
         {item.type === "github" && (
-          <svg viewBox="0 0 24 24" className="h-7 w-7 text-white">
+          <svg viewBox="0 0 24 24" className="h-7 w-7 text-[var(--text-primary)]">
             <path
               d="M12 3.8a8.3 8.3 0 0 0-2.6 16.2c.4.1.5-.2.5-.4v-1.6c-2.1.5-2.6-.9-2.6-.9-.4-.9-.9-1.1-.9-1.1-.8-.5.1-.5.1-.5.9.1 1.4.9 1.4.9.8 1.3 2.1 1 2.6.8.1-.6.3-1 .6-1.2-1.7-.2-3.6-.9-3.6-3.9 0-.8.3-1.5.8-2-.1-.2-.4-1 .1-2.1 0 0 .7-.2 2.2.8a7.8 7.8 0 0 1 4 0c1.5-1 2.2-.8 2.2-.8.5 1.1.2 1.9.1 2.1.5.5.8 1.2.8 2 0 3-1.9 3.6-3.7 3.8.3.3.6.8.6 1.7v2.4c0 .2.1.5.5.4A8.3 8.3 0 0 0 12 3.8Z"
               className={iconStrokeClass}
@@ -185,20 +185,20 @@ function SocialIconButton({
           </svg>
         )}
         {item.type === "instagram" && (
-          <svg viewBox="0 0 24 24" className="h-7 w-7 text-white">
+          <svg viewBox="0 0 24 24" className="h-7 w-7 text-[var(--text-primary)]">
             <rect x="4.2" y="4.2" width="15.6" height="15.6" rx="4.6" className={iconStrokeClass} />
             <circle cx="12" cy="12" r="3.5" className={iconStrokeClass} />
             <circle cx="17.2" cy="6.8" r="0.9" className={iconStrokeClass} />
           </svg>
         )}
         {item.type === "linkedin" && (
-          <svg viewBox="0 0 24 24" className="h-7 w-7 text-white">
+          <svg viewBox="0 0 24 24" className="h-7 w-7 text-[var(--text-primary)]">
             <rect x="4.2" y="4.2" width="15.6" height="15.6" rx="2.2" className={iconStrokeClass} />
             <path d="M8.3 10.3v5.8M8.3 7.8v.1M11.7 16.1v-3.2a2 2 0 0 1 4 0v3.2" className={iconStrokeClass} />
           </svg>
         )}
         {item.type === "discord" && (
-          <svg viewBox="0 0 24 24" className="h-7 w-7 text-white">
+          <svg viewBox="0 0 24 24" className="h-7 w-7 text-[var(--text-primary)]">
             <path
               d="M7.1 8.4c1.4-1 2.8-1.1 2.8-1.1l.3.7c-1 .2-1.5.5-1.5.5m5.1-.1c-1-.4-2-.4-2-.4l.3-.7s1.4.1 2.8 1.1M7.1 15.8c1.8 1.4 3.7 1.4 4.9 1.4 1.2 0 3.1 0 4.9-1.4.5-1.8.8-3.5.8-3.5-.7-.6-1.4-.9-1.4-.9-.6.4-1.3.7-1.3.7-.6.2-1.2.4-3 .4s-2.4-.2-3-.4c0 0-.7-.3-1.3-.7 0 0-.7.3-1.4.9 0 0 .3 1.7.8 3.5Z"
               className={iconStrokeClass}

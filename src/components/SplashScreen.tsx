@@ -10,9 +10,9 @@ type GreetingItem = { text: string; dir?: "rtl" | "ltr" }
 const GREETINGS: GreetingItem[] = [
   { text: "Halo", dir: "ltr" },
   { text: "Hello", dir: "ltr" },
-  { text: "こんにちは", dir: "ltr" },
-  { text: "안녕하세요", dir: "ltr" },
-  { text: "مرحبا", dir: "rtl" },
+  { text: "\u3053\u3093\u306b\u3061\u306f", dir: "ltr" },
+  { text: "\uc548\ub155\ud558\uc138\uc694", dir: "ltr" },
+  { text: "\u0645\u0631\u062d\u0628\u0627", dir: "rtl" },
   { text: "Bonjour", dir: "ltr" },
 ]
 
@@ -46,7 +46,6 @@ export default function SplashScreen({
   useEffect(() => {
     const previous = document.body.style.overflow
     document.body.style.overflow = "hidden"
-
     return () => {
       document.body.style.overflow = previous
     }
@@ -65,10 +64,7 @@ export default function SplashScreen({
   }, [])
 
   const startExit = useCallback((reason: ExitReason) => {
-    setPhase((prev) => {
-      if (prev === "exiting") return prev
-      return "exiting"
-    })
+    setPhase((prev) => (prev === "exiting" ? prev : "exiting"))
     setIsSkipping(reason === "skip")
     clearSequenceTimers()
     clearFinishTimer()
@@ -83,8 +79,8 @@ export default function SplashScreen({
     if (phase !== "greetings") return
 
     clearSequenceTimers()
-
     const step = GREETING_SLOT_MS + GREETING_GAP_MS
+
     greetingSequence.forEach((_, index) => {
       const id = window.setTimeout(() => {
         setCurrentGreetingIndex(index)
@@ -101,7 +97,6 @@ export default function SplashScreen({
     }, greetingSequence.length * step + BRAND_REVEAL_MS)
 
     sequenceTimeoutsRef.current.push(toBrand, autoExit)
-
     return () => clearSequenceTimers()
   }, [clearSequenceTimers, greetingSequence, phase, startExit])
 
@@ -120,7 +115,7 @@ export default function SplashScreen({
       animate={{ opacity: 1 }}
       exit={reduceMotion ? { opacity: 0 } : { opacity: 0, filter: "blur(6px)" }}
       transition={{ duration: reduceMotion ? 0.2 : 0.42, ease: "easeOut" }}
-      className="fixed inset-0 z-[200] flex cursor-pointer items-center justify-center overflow-hidden bg-black"
+      className="fixed inset-0 z-[200] flex cursor-pointer items-center justify-center overflow-hidden bg-[var(--splash-bg)]"
       onClick={() => {
         if (phase === "exiting") return
         startExit("skip")
@@ -140,12 +135,14 @@ export default function SplashScreen({
         <motion.div
           animate={reduceMotion ? undefined : { opacity: [0.5, 0.85, 0.55], scale: [1, 1.08, 1] }}
           transition={reduceMotion ? undefined : { duration: 3.6, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -left-20 top-[-180px] h-[460px] w-[460px] rounded-full bg-cyan-400/14 blur-3xl"
+          className="absolute -left-20 top-[-180px] h-[460px] w-[460px] rounded-full blur-3xl"
+          style={{ backgroundColor: "var(--accent-1)", opacity: 0.14 }}
         />
         <motion.div
           animate={reduceMotion ? undefined : { opacity: [0.46, 0.76, 0.5], scale: [1, 1.06, 1] }}
           transition={reduceMotion ? undefined : { duration: 3.9, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
-          className="absolute -right-24 bottom-[-210px] h-[520px] w-[520px] rounded-full bg-blue-500/14 blur-3xl"
+          className="absolute -right-24 bottom-[-210px] h-[520px] w-[520px] rounded-full blur-3xl"
+          style={{ backgroundColor: "var(--accent-2)", opacity: 0.14 }}
         />
       </div>
 
@@ -159,7 +156,7 @@ export default function SplashScreen({
               animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
               exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -12, scale: 0.98, filter: "blur(10px)" }}
               transition={{ duration: reduceMotion ? 0.16 : 0.22, ease: "easeOut" }}
-              className="text-[clamp(2.2rem,9vw,5.6rem)] font-semibold leading-tight tracking-tight text-white/96"
+              className="text-[clamp(2.2rem,9vw,5.6rem)] font-semibold leading-tight tracking-tight text-[var(--text-primary)]"
             >
               {currentGreeting?.text}
             </motion.h1>
@@ -170,7 +167,7 @@ export default function SplashScreen({
               animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: [0.985, 1.01, 1] }}
               exit={{ opacity: 0 }}
               transition={{ duration: reduceMotion ? 0.2 : 0.44, ease: "easeOut" }}
-              className="text-[clamp(2rem,8vw,5.2rem)] font-semibold leading-tight tracking-tight text-white/95"
+              className="text-[clamp(2rem,8vw,5.2rem)] font-semibold leading-tight tracking-tight text-[var(--text-primary)]"
             >
               <AnimatedText text="FaisPortofolio-v1" reduceMotion={reduceMotion} />
             </motion.h1>
@@ -182,7 +179,7 @@ export default function SplashScreen({
             initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
             animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
             transition={{ duration: reduceMotion ? 0.2 : 0.45, delay: reduceMotion ? 0.05 : 0.5 }}
-            className="mt-4 text-xs uppercase tracking-[0.2em] text-white/55"
+            className="mt-4 text-xs uppercase tracking-[0.2em] text-[var(--text-muted)]"
           >
             Click anywhere to skip
           </motion.p>
@@ -196,7 +193,7 @@ export default function SplashScreen({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: REDUCED_EXIT_MS / 1000, ease: "easeOut" }}
-              className="absolute inset-0 bg-black"
+              className="absolute inset-0 bg-[var(--splash-bg)]"
             />
           ) : (
             <>
@@ -214,7 +211,8 @@ export default function SplashScreen({
                   rotate: -2,
                 }}
                 transition={{ duration: EXIT_WIPE_MS / 1000, ease: [0.22, 1, 0.36, 1] }}
-                className="absolute -bottom-[36vmax] -right-[34vmax] h-[82vmax] w-[82vmax] bg-[#75d8ff]"
+                className="absolute -bottom-[36vmax] -right-[34vmax] h-[82vmax] w-[82vmax]"
+                style={{ backgroundColor: "var(--accent-2)" }}
               />
               <motion.div
                 initial={{ scale: 0.22, x: "40%", y: "42%", borderRadius: "58% 42% 55% 45% / 44% 55% 45% 56%", rotate: -14 }}
@@ -230,7 +228,8 @@ export default function SplashScreen({
                   rotate: 4,
                 }}
                 transition={{ duration: EXIT_WIPE_MS / 1000, ease: [0.22, 1, 0.36, 1], delay: 0.06 }}
-                className="absolute -bottom-[34vmax] -right-[30vmax] h-[74vmax] w-[74vmax] bg-[#38bdf8]/90 mix-blend-screen"
+                className="absolute -bottom-[34vmax] -right-[30vmax] h-[74vmax] w-[74vmax] mix-blend-screen"
+                style={{ backgroundColor: "var(--accent-1)", opacity: 0.9 }}
               />
               <motion.div
                 initial={{ scale: 0.14, x: "-20%", y: "58%", borderRadius: "52% 48% 43% 57% / 62% 44% 56% 38%", rotate: 8 }}
@@ -246,7 +245,8 @@ export default function SplashScreen({
                   rotate: -5,
                 }}
                 transition={{ duration: EXIT_WIPE_MS / 1000, ease: [0.22, 1, 0.36, 1], delay: 0.11 }}
-                className="absolute -bottom-[42vmax] -left-[36vmax] h-[70vmax] w-[70vmax] bg-[#22d3ee]/70 mix-blend-screen"
+                className="absolute -bottom-[42vmax] -left-[36vmax] h-[70vmax] w-[70vmax] mix-blend-screen"
+                style={{ backgroundColor: "var(--accent-1)", opacity: 0.72 }}
               />
               {isSkipping && (
                 <motion.div
@@ -271,7 +271,7 @@ export default function SplashScreen({
         }}
       />
 
-      <div className="pointer-events-none absolute bottom-6 left-1/2 z-30 -translate-x-1/2 text-[10px] uppercase tracking-[0.25em] text-white/35">
+      <div className="pointer-events-none absolute bottom-6 left-1/2 z-30 -translate-x-1/2 text-[10px] uppercase tracking-[0.25em] text-[var(--text-muted)]">
         {phase === "greetings" ? "Loading Sequence" : "FaisPortofolio-v1"}
       </div>
     </motion.div>

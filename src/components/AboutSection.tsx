@@ -112,9 +112,9 @@ export default function AboutSection() {
       onPointerMove={handlePointerMove}
       onPointerDown={handlePointerDown}
       onPointerLeave={handlePointerLeave}
-      className="relative min-h-screen overflow-hidden bg-[#03050b] text-white px-6 md:px-16 py-24 flex items-center"
+      className="relative flex min-h-screen items-center overflow-hidden bg-[var(--bg-page)] px-6 py-24 text-[var(--text-primary)] md:px-16"
     >
-      <div className="relative z-0 mx-auto w-full max-w-6xl grid gap-10 md:grid-cols-2 items-center">
+      <div className="relative z-0 mx-auto grid w-full max-w-6xl items-center gap-10 md:grid-cols-2">
         <motion.div
           ref={leftRef}
           initial={reduceMotion ? undefined : { opacity: 0, y: 18 }}
@@ -127,11 +127,11 @@ export default function AboutSection() {
           }
           transition={{ duration: 0.5, ease: "easeOut" }}
         >
-          <p className="text-sm uppercase tracking-[0.2em] text-white/60">About Me</p>
+          <p className="text-sm uppercase tracking-[0.2em] text-[var(--text-muted)]">About Me</p>
           <h2 className="mt-3 text-4xl md:text-6xl font-bold leading-tight">
             Building clean UI and smooth interaction.
           </h2>
-          <p className="mt-6 text-white/75 text-base md:text-lg leading-relaxed">
+          <p className="mt-6 text-base leading-relaxed text-[var(--text-secondary)] md:text-lg">
             I am a frontend developer focused on crafting responsive, performant,
             and user-centered web experiences with modern JavaScript and TypeScript.
           </p>
@@ -151,9 +151,9 @@ export default function AboutSection() {
         >
           <div
           ref={photoCardRef}
-          className="relative aspect-[4/3] md:aspect-[5/4] w-full max-w-[560px] overflow-hidden rounded-3xl border border-white/15 shadow-[0_20px_70px_rgba(0,0,0,0.55)]"
+          className="relative aspect-[4/3] w-full max-w-[560px] overflow-hidden rounded-3xl border border-[var(--border-subtle)] shadow-[0_20px_70px_rgba(0,0,0,0.35)] md:aspect-[5/4]"
           >
-            <div className="absolute inset-0 bg-[linear-gradient(160deg,#1a2238_0%,#0f1629_42%,#070c17_100%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(160deg,var(--bg-elev)_0%,var(--bg-surface)_46%,var(--bg-page)_100%)]" />
             <div className="absolute inset-0 bg-[url('/about-photo.jpg')] bg-cover bg-center" />
             <motion.div
               aria-hidden="true"
@@ -183,7 +183,7 @@ export default function AboutSection() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 6 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
-          className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-8 z-40 rounded-full border border-white/20 bg-black/55 px-4 py-2 text-xs font-medium tracking-wide text-white/90 backdrop-blur-md"
+          className="pointer-events-none absolute bottom-8 left-1/2 z-40 -translate-x-1/2 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-page)]/70 px-4 py-2 text-xs font-medium tracking-wide text-[var(--text-primary)]/90 backdrop-blur-md"
         >
           Tap untuk menyorot area
         </motion.div>

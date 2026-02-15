@@ -18,10 +18,10 @@ export default function ProjectSection() {
     <section
       id="project"
       ref={sectionRef}
-      className="min-h-screen bg-[#070b14] text-white px-6 md:px-16 py-24 flex items-center"
+      className="flex min-h-screen items-center bg-[var(--bg-surface)] px-6 py-24 text-[var(--text-primary)] md:px-16"
     >
       <div className="mx-auto w-full max-w-6xl">
-        <p className="text-sm uppercase tracking-[0.2em] text-white/60">Projects</p>
+        <p className="text-sm uppercase tracking-[0.2em] text-[var(--text-muted)]">Projects</p>
         <motion.a
           ref={ctaRef}
           href={PROJECT_LINK}
@@ -41,7 +41,7 @@ export default function ProjectSection() {
               : { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
           }
         >
-          <span className="text-[clamp(2.1rem,7vw,6.5rem)] leading-[1.05] font-semibold tracking-tight text-white/92">
+          <span className="text-[clamp(2.1rem,7vw,6.5rem)] font-semibold leading-[1.05] tracking-tight text-[var(--text-primary)]/92">
             <AnimatedText
               text={PREFIX}
               baseDelay={0}
@@ -60,10 +60,10 @@ export default function ProjectSection() {
                   className="transition-[filter,opacity,letter-spacing] duration-300 ease-out brightness-100 group-hover:brightness-110 group-hover:tracking-[0.02em]"
                 />
                 <span
-                  className="pointer-events-none absolute left-0 top-1/2 h-[2px] w-full -translate-y-1/2 bg-gradient-to-r from-transparent via-white/90 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                  className="pointer-events-none absolute left-0 top-1/2 h-[2px] w-full -translate-y-1/2 bg-gradient-to-r from-transparent via-[var(--text-primary)] to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100"
                 >
                   <span
-                    className={`absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent ${
+                    className={`absolute inset-0 bg-gradient-to-r from-transparent via-[var(--text-primary)] to-transparent ${
                       reduceMotion
                         ? ""
                         : "-translate-x-[120%] transition-transform duration-500 ease-out group-hover:translate-x-[120%]"
@@ -74,7 +74,8 @@ export default function ProjectSection() {
               <svg
                 viewBox="0 0 220 90"
                 preserveAspectRatio="none"
-                className="pointer-events-none absolute -left-[10%] -top-[28%] h-[1.7em] w-[125%] text-[#3a7dff]/95"
+                className="pointer-events-none absolute -left-[10%] -top-[28%] h-[1.7em] w-[125%] opacity-95"
+                style={{ color: "var(--accent-2)" }}
               >
                 <path
                   d="M15 47 C 40 10, 165 8, 205 40 C 213 48, 214 63, 196 72 C 148 92, 52 86, 23 64"

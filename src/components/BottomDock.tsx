@@ -36,7 +36,7 @@ export default function BottomDock() {
   const mouseX = useMotionValue(Number.POSITIVE_INFINITY)
   const lampX = useMotionValue(0)
   const lampY = useMotionValue(0)
-  const lampBg = useMotionTemplate`radial-gradient(140px circle at ${lampX}px ${lampY}px, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0.08) 48%, rgba(255, 255, 255, 0) 74%)`
+  const lampBg = useMotionTemplate`radial-gradient(140px circle at ${lampX}px ${lampY}px, rgba(34, 211, 238, 0.34), rgba(59, 130, 246, 0.13) 48%, rgba(59, 130, 246, 0) 74%)`
 
   useEffect(() => {
     const handleScroll = () => {
@@ -79,7 +79,7 @@ export default function BottomDock() {
           mouseX.set(Number.POSITIVE_INFINITY)
           setIsHoveringDock(false)
         }}
-        className="relative flex items-end gap-12 bg-neutral-900/80 backdrop-blur-xl px-11 py-5 rounded-full shadow-2xl border border-white/10"
+        className="relative flex items-end gap-12 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-elev)]/80 px-11 py-5 shadow-2xl backdrop-blur-xl"
       >
         <motion.div
           aria-hidden="true"
@@ -150,12 +150,12 @@ function DockItem({
       href={href}
       aria-label={label}
       title={label}
-      className="relative z-10 block text-white"
+      className="relative z-10 block text-[var(--text-primary)]"
     >
       <motion.span
         aria-hidden="true"
         style={{ opacity: glowOpacity }}
-        className="pointer-events-none absolute -inset-3 rounded-full bg-white/30 blur-lg"
+        className="pointer-events-none absolute -inset-3 rounded-full bg-[var(--glow-accent)] blur-lg"
       />
       <motion.div
         style={{ scale, y, opacity: iconOpacity }}
@@ -166,7 +166,7 @@ function DockItem({
         <motion.span
           animate={{ scale: dotScale, opacity: dotOpacity }}
           transition={{ duration: 0.2, ease: "easeOut" }}
-          className="absolute left-1/2 -translate-x-1/2 -bottom-2 h-1.5 w-1.5 rounded-full bg-white"
+          className="absolute -bottom-2 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-[var(--accent-1)]"
         />
       </motion.div>
     </a>

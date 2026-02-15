@@ -252,7 +252,7 @@ export default function Hero() {
       ref={heroRef}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
-      className="relative h-screen flex items-center justify-center bg-black text-white overflow-hidden"
+      className="relative flex h-screen items-center justify-center overflow-hidden bg-[var(--bg-hero)] text-[var(--text-primary)]"
     >
       <div className="text-center z-10 px-4">
         <motion.h1
@@ -268,7 +268,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 10 }}
           animate={isHeroInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
           transition={{ delay: 0.5 }}
-          className="mt-4 text-base md:text-lg text-gray-400"
+          className="mt-4 text-base text-[var(--text-secondary)] md:text-lg"
         >
           Frontend Developer | TypeScript Enthusiast
         </motion.p>
@@ -282,13 +282,13 @@ export default function Hero() {
           <a
             href="/cv-petershaan.pdf"
             download
-            className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white text-black px-6 py-3 text-sm font-semibold transition-transform duration-200 hover:scale-[1.03]"
+            className="inline-flex items-center justify-center rounded-full border border-[var(--border-subtle)] bg-[var(--text-primary)] px-6 py-3 text-sm font-semibold text-[var(--bg-page)] transition-transform duration-200 hover:scale-[1.03]"
           >
             Download CV
           </a>
           <a
             href="#contact"
-            className="inline-flex items-center justify-center rounded-full border border-white/30 px-6 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-white/10"
+            className="inline-flex items-center justify-center rounded-full border border-[var(--border-subtle)] px-6 py-3 text-sm font-semibold text-[var(--text-primary)] transition-colors duration-200 hover:bg-[var(--accent-soft)]"
           >
             Contact Me
           </a>
