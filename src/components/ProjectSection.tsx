@@ -4,9 +4,9 @@ import { motion, useInView, useReducedMotion } from "framer-motion"
 import { useRef } from "react"
 
 const PROJECT_LINK = "#"
-const PREFIX = "Check out the"
-const EMPHASIS = "project"
-const SUFFIX = "here"
+const PREFIX = "Tap or click to view"
+const EMPHASIS = "my projects"
+const SUFFIX = ""
 
 export default function ProjectSection() {
   const sectionRef = useRef<HTMLElement | null>(null)
@@ -26,7 +26,7 @@ export default function ProjectSection() {
           ref={ctaRef}
           href={PROJECT_LINK}
           className="group mt-8 inline-block select-none"
-          aria-label="Check out the project here"
+          aria-label="Tap or click to view my projects"
           initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -60, filter: "blur(6px)" }}
           animate={
             isInView
@@ -95,13 +95,17 @@ export default function ProjectSection() {
                 />
               </svg>
             </span>
-            <span className="inline-block w-[0.45em]" />
-            <AnimatedText
-              text={SUFFIX}
-              baseDelay={340}
-              reduceMotion={reduceMotion}
-              isInView={isInView}
-            />
+            {SUFFIX ? (
+              <>
+                <span className="inline-block w-[0.45em]" />
+                <AnimatedText
+                  text={SUFFIX}
+                  baseDelay={340}
+                  reduceMotion={reduceMotion}
+                  isInView={isInView}
+                />
+              </>
+            ) : null}
           </span>
         </motion.a>
       </div>
