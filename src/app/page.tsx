@@ -49,6 +49,15 @@ export default function Home() {
   useEffect(() => {
     if (!isSplashReady) return
 
+    const nav = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined
+    const isReload = nav?.type === "reload"
+    if (isReload) {
+      if (window.location.hash && window.location.hash !== "#home") {
+        window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`)
+      }
+      return
+    }
+
     const hash = window.location.hash
     if (!hash || hash === "#home") return
 
