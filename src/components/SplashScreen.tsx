@@ -22,8 +22,7 @@ const BRAND_REVEAL_MS = 1020
 const EXIT_WIPE_MS = 760
 const REDUCED_EXIT_MS = 200
 
-function getGreetingSequence(reduced: boolean, mobileLite: boolean) {
-  if (mobileLite) return GREETINGS.slice(0, 4)
+function getGreetingSequence(reduced: boolean) {
   return reduced ? GREETINGS.slice(0, 3) : GREETINGS
 }
 
@@ -41,8 +40,8 @@ export default function SplashScreen({
   const finishTimeoutRef = useRef<number | null>(null)
 
   const greetingSequence = useMemo(
-    () => getGreetingSequence(Boolean(reduceMotion), isMobileLite),
-    [isMobileLite, reduceMotion]
+    () => getGreetingSequence(Boolean(reduceMotion)),
+    [reduceMotion]
   )
 
   useEffect(() => {
@@ -81,11 +80,11 @@ export default function SplashScreen({
     clearSequenceTimers()
     clearFinishTimer()
 
-    const exitDuration = reduceMotion || isMobileLite ? REDUCED_EXIT_MS : EXIT_WIPE_MS
+    const exitDuration = reduceMotion ? REDUCED_EXIT_MS : EXIT_WIPE_MS
     finishTimeoutRef.current = window.setTimeout(() => {
       onFinish()
     }, exitDuration)
-  }, [clearFinishTimer, clearSequenceTimers, isMobileLite, onFinish, reduceMotion])
+  }, [clearFinishTimer, clearSequenceTimers, onFinish, reduceMotion])
 
   useEffect(() => {
     if (phase !== "greetings") return
@@ -178,10 +177,10 @@ export default function SplashScreen({
               initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
               animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: [0.985, 1.01, 1] }}
               exit={{ opacity: 0 }}
-              transition={{ duration: reduceMotion || isMobileLite ? 0.2 : 0.44, ease: "easeOut" }}
+              transition={{ duration: reduceMotion ? 0.2 : 0.44, ease: "easeOut" }}
               className="text-[clamp(2rem,8vw,5.2rem)] font-semibold leading-tight tracking-tight text-[var(--text-primary)]"
             >
-              {isMobileLite ? "FaisPortofolio-v1" : <AnimatedText text="FaisPortofolio-v1" reduceMotion={Boolean(reduceMotion)} />}
+              {reduceMotion ? "FaisPortofolio-v1" : <AnimatedText text="FaisPortofolio-v1" reduceMotion={Boolean(reduceMotion)} />}
             </motion.h1>
           )}
         </AnimatePresence>
