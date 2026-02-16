@@ -10,11 +10,6 @@ import {
 } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react"
-import {
-  FlipButton,
-  FlipButtonBack,
-  FlipButtonFront,
-} from "@/components/animate-ui/components/buttons/flip"
 
 const ABOUT_PHOTO = "/about-photo.jpg"
 const PHOTO_TILT_X_MAX = 8
@@ -30,6 +25,7 @@ export default function AboutSection() {
   const [isDesktopPointer, setIsDesktopPointer] = useState(false)
   const [reduceMotion, setReduceMotion] = useState(false)
   const [isAboutLoading, setIsAboutLoading] = useState(false)
+  const [isTouchFlipActive, setIsTouchFlipActive] = useState(false)
   const lampX = useMotionValue(0)
   const lampY = useMotionValue(0)
   const lampCardX = useMotionValue(0)
@@ -127,6 +123,16 @@ export default function AboutSection() {
     }, reduceMotion ? 220 : ABOUT_TRANSITION_MS)
   }
 
+  const activateTouchFlip = () => {
+    if (isDesktopPointer) return
+    setIsTouchFlipActive(true)
+  }
+
+  const deactivateTouchFlip = () => {
+    if (isDesktopPointer) return
+    setIsTouchFlipActive(false)
+  }
+
   return (
     <section
       id="about"
@@ -169,22 +175,44 @@ export default function AboutSection() {
             transition={{ duration: 0.4, ease: "easeOut", delay: 0.12 }}
             className="mt-7"
           >
-            <FlipButton
+            <motion.button
               type="button"
-              from="top"
               disabled={isAboutLoading}
               onClick={handleAboutNavigation}
-              className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-2)] disabled:pointer-events-none disabled:opacity-65"
+              onPointerDown={activateTouchFlip}
+              onPointerUp={deactivateTouchFlip}
+              onPointerCancel={deactivateTouchFlip}
+              onPointerLeave={deactivateTouchFlip}
+              initial={false}
+              animate={isTouchFlipActive ? "flipped" : "idle"}
+              whileHover={isDesktopPointer ? "flipped" : undefined}
+              whileTap={reduceMotion ? undefined : { scale: 0.97 }}
+              className="relative inline-grid place-items-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-2)] disabled:pointer-events-none disabled:opacity-65"
+              style={{ perspective: "900px" }}
             >
-              <FlipButtonFront className="rounded-full border border-[var(--border-subtle)] bg-[var(--accent-2)] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_28px_rgba(0,0,0,0.2)]">
+              <motion.span
+                variants={{
+                  idle: { opacity: 1, rotateX: 0, y: "0%" },
+                  flipped: { opacity: 0, rotateX: 90, y: "50%" },
+                }}
+                transition={{ type: "spring", stiffness: 280, damping: 22 }}
+                className="col-start-1 row-start-1 inline-flex items-center gap-2 rounded-full border border-[var(--border-subtle)] bg-[var(--accent-2)] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_28px_rgba(0,0,0,0.2)]"
+              >
                 <span>About Me</span>
                 <span aria-hidden="true">-&gt;</span>
-              </FlipButtonFront>
-              <FlipButtonBack className="rounded-full border border-[var(--border-subtle)] bg-[var(--accent-2)]/90 px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_28px_rgba(0,0,0,0.2)]">
+              </motion.span>
+              <motion.span
+                variants={{
+                  idle: { opacity: 0, rotateX: 90, y: "-50%" },
+                  flipped: { opacity: 1, rotateX: 0, y: "0%" },
+                }}
+                transition={{ type: "spring", stiffness: 280, damping: 22 }}
+                className="col-start-1 row-start-1 inline-flex items-center gap-2 rounded-full border border-[var(--border-subtle)] bg-[var(--accent-2)]/90 px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_28px_rgba(0,0,0,0.2)]"
+              >
                 <span>About Me</span>
                 <span aria-hidden="true">-&gt;</span>
-              </FlipButtonBack>
-            </FlipButton>
+              </motion.span>
+            </motion.button>
           </motion.div>
 
         </motion.div>

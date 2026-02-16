@@ -23,7 +23,7 @@ const EXIT_WIPE_MS = 760
 const REDUCED_EXIT_MS = 200
 
 function getGreetingSequence(reduced: boolean, mobileLite: boolean) {
-  if (mobileLite) return GREETINGS.slice(0, 2)
+  if (mobileLite) return GREETINGS.slice(0, 4)
   return reduced ? GREETINGS.slice(0, 3) : GREETINGS
 }
 

@@ -1,7 +1,7 @@
 "use client"
 
 import { motion, useInView, useReducedMotion } from "framer-motion"
-import { useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 
 const PROJECT_LINK = "#"
 const PREFIX = "Tap or click to view"
@@ -12,7 +12,20 @@ export default function ProjectSection() {
   const sectionRef = useRef<HTMLElement | null>(null)
   const ctaRef = useRef<HTMLAnchorElement | null>(null)
   const reduceMotion = useReducedMotion()
+  const [isMobile, setIsMobile] = useState(false)
   const isInView = useInView(sectionRef, { once: false, amount: 0.55 })
+  const useLiteAnimation = Boolean(reduceMotion || isMobile)
+  const showEmphasisEffect = isMobile ? isInView : undefined
+
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 768px), (pointer: coarse)")
+    const syncMobile = () => setIsMobile(media.matches)
+    syncMobile()
+    media.addEventListener("change", syncMobile)
+    return () => {
+      media.removeEventListener("change", syncMobile)
+    }
+  }, [])
 
   return (
     <section
@@ -27,17 +40,19 @@ export default function ProjectSection() {
           href={PROJECT_LINK}
           className="group mt-8 inline-block select-none"
           aria-label="Tap or click to view my projects"
-          initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -60, filter: "blur(6px)" }}
+          initial={useLiteAnimation ? { opacity: 0, y: 24 } : { opacity: 0, y: -60, filter: "blur(6px)" }}
           animate={
             isInView
-              ? { opacity: 1, y: 0, filter: "blur(0px)" }
-              : reduceMotion
+              ? useLiteAnimation
+                ? { opacity: 1, y: 0 }
+                : { opacity: 1, y: 0, filter: "blur(0px)" }
+              : useLiteAnimation
                 ? { opacity: 0 }
                 : { opacity: 0, y: -60, filter: "blur(6px)" }
           }
           transition={
-            reduceMotion
-              ? { duration: 0.35, ease: "easeOut" }
+            useLiteAnimation
+              ? { duration: 0.28, ease: "easeOut" }
               : { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
           }
         >
@@ -54,17 +69,21 @@ export default function ProjectSection() {
                 <AnimatedText
                   text={EMPHASIS}
                   baseDelay={180}
-                  reduceMotion={Boolean(reduceMotion)}
+                  reduceMotion={useLiteAnimation}
                   isInView={isInView}
                   expressive
-                  className="transition-[filter,opacity,letter-spacing] duration-300 ease-out brightness-100 group-hover:brightness-110 group-hover:tracking-[0.02em]"
+                  className={`transition-[filter,opacity,letter-spacing] duration-300 ease-out brightness-100 ${
+                    isMobile ? "" : "group-hover:brightness-110 group-hover:tracking-[0.02em]"
+                  }`}
                 />
                 <span
-                  className="pointer-events-none absolute left-0 top-1/2 h-[2px] w-full -translate-y-1/2 bg-gradient-to-r from-transparent via-[var(--text-primary)] to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                  className={`pointer-events-none absolute left-0 top-1/2 h-[2px] w-full -translate-y-1/2 bg-gradient-to-r from-transparent via-[var(--text-primary)] to-transparent transition-opacity duration-200 ${
+                    showEmphasisEffect ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                  }`}
                 >
                   <span
                     className={`absolute inset-0 bg-gradient-to-r from-transparent via-[var(--text-primary)] to-transparent ${
-                      reduceMotion
+                      useLiteAnimation
                         ? ""
                         : "-translate-x-[120%] transition-transform duration-500 ease-out group-hover:translate-x-[120%]"
                     }`}
@@ -83,7 +102,11 @@ export default function ProjectSection() {
                   stroke="currentColor"
                   strokeWidth="6"
                   strokeLinecap="round"
-                  className="opacity-0 stroke-dasharray-[560] stroke-dashoffset-[560] transition-all duration-700 ease-out group-hover:opacity-100 group-hover:stroke-dashoffset-0"
+                  className={`stroke-dasharray-[560] transition-all duration-700 ease-out ${
+                    showEmphasisEffect
+                      ? "opacity-100 stroke-dashoffset-0"
+                      : "opacity-0 stroke-dashoffset-[560] group-hover:opacity-100 group-hover:stroke-dashoffset-0"
+                  }`}
                 />
                 <path
                   d="M70 20 C 118 6, 168 14, 184 26"
@@ -91,7 +114,11 @@ export default function ProjectSection() {
                   stroke="currentColor"
                   strokeWidth="5"
                   strokeLinecap="round"
-                  className="opacity-0 stroke-dasharray-[200] stroke-dashoffset-[200] transition-all duration-500 delay-100 ease-out group-hover:opacity-100 group-hover:stroke-dashoffset-0"
+                  className={`stroke-dasharray-[200] transition-all duration-500 delay-100 ease-out ${
+                    showEmphasisEffect
+                      ? "opacity-100 stroke-dashoffset-0"
+                      : "opacity-0 stroke-dashoffset-[200] group-hover:opacity-100 group-hover:stroke-dashoffset-0"
+                  }`}
                 />
               </svg>
             </span>
