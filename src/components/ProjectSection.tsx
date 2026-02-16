@@ -6,16 +6,15 @@ import { useEffect, useRef, useState } from "react"
 const PROJECT_LINK = "#"
 const PREFIX = "Tap or click to view"
 const EMPHASIS = "my projects"
-const SUFFIX = ""
 
 export default function ProjectSection() {
   const sectionRef = useRef<HTMLElement | null>(null)
   const ctaRef = useRef<HTMLAnchorElement | null>(null)
   const reduceMotion = useReducedMotion()
   const [isMobile, setIsMobile] = useState(false)
-  const isInView = useInView(sectionRef, { once: false, amount: 0.55 })
+  const [mobileCueTick, setMobileCueTick] = useState(0)
+  const isInView = useInView(sectionRef, { once: false, amount: isMobile ? 0.22 : 0.55 })
   const useLiteAnimation = Boolean(reduceMotion || isMobile)
-  const showEmphasisEffect = isMobile ? isInView : undefined
 
   useEffect(() => {
     const media = window.matchMedia("(max-width: 768px), (pointer: coarse)")
@@ -38,6 +37,9 @@ export default function ProjectSection() {
         <motion.a
           ref={ctaRef}
           href={PROJECT_LINK}
+          onPointerDown={() => {
+            if (isMobile) setMobileCueTick((value) => value + 1)
+          }}
           className="group mt-8 inline-block select-none"
           aria-label="Tap or click to view my projects"
           initial={
@@ -61,86 +63,123 @@ export default function ProjectSection() {
           }
         >
           <span className="text-[clamp(2.1rem,7vw,6.5rem)] font-semibold leading-[1.05] tracking-tight text-[var(--text-primary)]/92">
-            <AnimatedText
-              text={PREFIX}
-              baseDelay={0}
-              reduceMotion={Boolean(reduceMotion)}
-              isInView={isInView}
-            />
-            <span className="inline-block w-[0.45em]" />
-            <span className="group/emphasis relative inline-block">
-              <span className="relative z-10 inline-block overflow-hidden">
-                <AnimatedText
-                  text={EMPHASIS}
-                  baseDelay={180}
-                  reduceMotion={useLiteAnimation}
-                  isInView={isInView}
-                  expressive
-                  className={`transition-[filter,opacity,letter-spacing] duration-300 ease-out brightness-100 ${
-                    isMobile ? "" : "group-hover:brightness-110 group-hover:tracking-[0.02em]"
-                  }`}
-                />
-                <span
-                  className={`pointer-events-none absolute left-0 top-1/2 h-[2px] w-full -translate-y-1/2 bg-gradient-to-r from-transparent via-[var(--text-primary)] to-transparent transition-opacity duration-200 ${
-                    showEmphasisEffect ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-                  }`}
-                >
-                  <span
-                    className={`absolute inset-0 bg-gradient-to-r from-transparent via-[var(--text-primary)] to-transparent ${
-                      useLiteAnimation
-                        ? ""
-                        : "-translate-x-[120%] transition-transform duration-500 ease-out group-hover:translate-x-[120%]"
-                    }`}
-                  />
-                </span>
-              </span>
-              <svg
-                viewBox="0 0 220 90"
-                preserveAspectRatio="none"
-                className="pointer-events-none absolute -left-[10%] -top-[28%] h-[1.7em] w-[125%] opacity-95"
-                style={{ color: "var(--accent-2)" }}
-              >
-                <path
-                  d="M15 47 C 40 10, 165 8, 205 40 C 213 48, 214 63, 196 72 C 148 92, 52 86, 23 64"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="6"
-                  strokeLinecap="round"
-                  className={`stroke-dasharray-[560] transition-all duration-700 ease-out ${
-                    showEmphasisEffect
-                      ? "opacity-100 stroke-dashoffset-0"
-                      : "opacity-0 stroke-dashoffset-[560] group-hover:opacity-100 group-hover:stroke-dashoffset-0"
-                  }`}
-                />
-                <path
-                  d="M70 20 C 118 6, 168 14, 184 26"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="5"
-                  strokeLinecap="round"
-                  className={`stroke-dasharray-[200] transition-all duration-500 delay-100 ease-out ${
-                    showEmphasisEffect
-                      ? "opacity-100 stroke-dashoffset-0"
-                      : "opacity-0 stroke-dashoffset-[200] group-hover:opacity-100 group-hover:stroke-dashoffset-0"
-                  }`}
-                />
-              </svg>
-            </span>
-            {SUFFIX ? (
+            {isMobile ? (
+              <MobileProjectHeading isInView={isInView} cueTick={mobileCueTick} />
+            ) : (
               <>
+                <AnimatedText text={PREFIX} baseDelay={0} reduceMotion={Boolean(reduceMotion)} isInView={isInView} />
                 <span className="inline-block w-[0.45em]" />
-                <AnimatedText
-                  text={SUFFIX}
-                  baseDelay={340}
-                  reduceMotion={Boolean(reduceMotion)}
-                  isInView={isInView}
-                />
+                <span className="group/emphasis relative inline-block">
+                  <span className="relative z-10 inline-block overflow-hidden">
+                    <AnimatedText
+                      text={EMPHASIS}
+                      baseDelay={180}
+                      reduceMotion={Boolean(reduceMotion)}
+                      isInView={isInView}
+                      expressive
+                      className="transition-[filter,opacity,letter-spacing] duration-300 ease-out brightness-100 group-hover:brightness-110 group-hover:tracking-[0.02em]"
+                    />
+                    <span className="pointer-events-none absolute left-0 top-1/2 h-[2px] w-full -translate-y-1/2 bg-gradient-to-r from-transparent via-[var(--text-primary)] to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                      <span
+                        className={`absolute inset-0 bg-gradient-to-r from-transparent via-[var(--text-primary)] to-transparent ${
+                          reduceMotion
+                            ? ""
+                            : "-translate-x-[120%] transition-transform duration-500 ease-out group-hover:translate-x-[120%]"
+                        }`}
+                      />
+                    </span>
+                  </span>
+                  <svg
+                    viewBox="0 0 220 90"
+                    preserveAspectRatio="none"
+                    className="pointer-events-none absolute -left-[10%] -top-[28%] h-[1.7em] w-[125%] opacity-95"
+                    style={{ color: "var(--accent-2)" }}
+                  >
+                    <path
+                      d="M15 47 C 40 10, 165 8, 205 40 C 213 48, 214 63, 196 72 C 148 92, 52 86, 23 64"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="6"
+                      strokeLinecap="round"
+                      className="opacity-0 stroke-dasharray-[560] stroke-dashoffset-[560] transition-all duration-700 ease-out group-hover:opacity-100 group-hover:stroke-dashoffset-0"
+                    />
+                    <path
+                      d="M70 20 C 118 6, 168 14, 184 26"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="5"
+                      strokeLinecap="round"
+                      className="opacity-0 stroke-dasharray-[200] stroke-dashoffset-[200] transition-all duration-500 delay-100 ease-out group-hover:opacity-100 group-hover:stroke-dashoffset-0"
+                    />
+                  </svg>
+                </span>
               </>
-            ) : null}
+            )}
           </span>
         </motion.a>
       </div>
     </section>
+  )
+}
+
+function MobileProjectHeading({
+  isInView,
+  cueTick,
+}: {
+  isInView: boolean
+  cueTick: number
+}) {
+  return (
+    <>
+      <motion.span
+        initial={{ opacity: 0, y: 12 }}
+        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
+        className="inline-block"
+      >
+        {PREFIX}
+      </motion.span>
+      <span className="inline-block w-[0.45em]" />
+      <span className="relative inline-block">
+        <motion.span
+          initial={{ opacity: 0, y: 12 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+          transition={{ duration: 0.25, delay: 0.08, ease: "easeOut" }}
+          className="relative z-10 inline-block"
+        >
+          {EMPHASIS}
+        </motion.span>
+        <svg
+          viewBox="0 0 220 90"
+          preserveAspectRatio="none"
+          className="pointer-events-none absolute -left-[10%] -top-[28%] h-[1.7em] w-[125%]"
+          style={{ color: "var(--accent-2)" }}
+        >
+          <motion.path
+            key={`mobile-ring-1-${cueTick}-${isInView ? "in" : "out"}`}
+            d="M15 47 C 40 10, 165 8, 205 40 C 213 48, 214 63, 196 72 C 148 92, 52 86, 23 64"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="6"
+            strokeLinecap="round"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={isInView ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          />
+          <motion.path
+            key={`mobile-ring-2-${cueTick}-${isInView ? "in" : "out"}`}
+            d="M70 20 C 118 6, 168 14, 184 26"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="5"
+            strokeLinecap="round"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={isInView ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
+            transition={{ duration: 0.5, delay: 0.08, ease: "easeOut" }}
+          />
+        </svg>
+      </span>
+    </>
   )
 }
 

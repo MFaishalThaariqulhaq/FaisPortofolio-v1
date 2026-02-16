@@ -1,38 +1,45 @@
 "use client"
 
-import { useState } from "react"
+import { useState, type MouseEvent } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import ThemeToggle from "@/components/ThemeToggle"
 
 const SKIP_SPLASH_ONCE_FLAG = "__faisSkipSplashOnce"
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
+  const router = useRouter()
   const pathname = usePathname()
   const isHome = pathname === "/"
   const brandHref = isHome ? "/" : "/#about"
-
-  const toSection = (hash: string) => (isHome ? hash : `/${hash}`)
-
   const menuItems = [
-    { label: "Home", href: toSection("#home") },
-    { label: "About", href: toSection("#about") },
-    { label: "Project", href: toSection("#project") },
-    { label: "Contact", href: toSection("#contact") },
+    { label: "Home", href: "/#home" },
+    { label: "About", href: isHome ? "/#about" : "/about" },
+    { label: "Project", href: "/#project" },
+    { label: "Contact", href: "/#contact" },
   ]
 
-  const handleBrandClick = () => {
-    if (isHome) return
-    window.sessionStorage.setItem(SKIP_SPLASH_ONCE_FLAG, "1")
-  }
-
-  const handleMenuLinkClick = () => {
-    if (!isHome) {
+  const navigateTo = (href: string) => {
+    const toHomeSection = href.startsWith("/#")
+    if (!isHome && toHomeSection) {
       window.sessionStorage.setItem(SKIP_SPLASH_ONCE_FLAG, "1")
     }
+
     setOpen(false)
+    router.push(href)
+  }
+
+  const handleBrandClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (isHome) return
+    event.preventDefault()
+    navigateTo("/#about")
+  }
+
+  const handleMenuLinkClick = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
+    event.preventDefault()
+    navigateTo(href)
   }
 
   return (
@@ -116,7 +123,7 @@ export default function Navbar() {
                 >
                   <Link
                     href={item.href}
-                    onClick={handleMenuLinkClick}
+                    onClick={(event) => handleMenuLinkClick(event, item.href)}
                     className="group relative text-4xl font-semibold tracking-wide text-[var(--text-primary)] md:text-6xl"
                   >
                     {item.label}
