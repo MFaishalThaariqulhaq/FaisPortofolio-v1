@@ -2,25 +2,31 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import ThemeToggle from "@/components/ThemeToggle"
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
+  const pathname = usePathname()
+  const isHome = pathname === "/"
+
+  const toSection = (hash: string) => (isHome ? hash : `/${hash}`)
 
   const menuItems = [
-    { label: "Home", href: "#home" },
-    { label: "About", href: "#about" },
-    { label: "Project", href: "#project" },
-    { label: "Contact", href: "#contact" },
+    { label: "Home", href: toSection("#home") },
+    { label: "About", href: toSection("#about") },
+    { label: "Project", href: toSection("#project") },
+    { label: "Contact", href: toSection("#contact") },
   ]
 
   return (
     <>
       {/* NAVBAR */}
       <nav className="fixed top-0 left-0 z-50 flex w-full items-center justify-between px-8 py-8 md:px-16">
-        <h1 className="text-lg font-medium tracking-wider text-[var(--text-primary)]">
+        <Link href="/" className="text-lg font-medium tracking-wider text-[var(--text-primary)]">
           Faishal
-        </h1>
+        </Link>
 
         <div className="flex items-center gap-3">
           <ThemeToggle />
@@ -83,7 +89,7 @@ export default function Navbar() {
                   }}
                   transition={{ duration: 0.5 }}
                 >
-                  <a
+                  <Link
                     href={item.href}
                     onClick={() => setOpen(false)}
                     className="group relative text-4xl font-semibold tracking-wide text-[var(--text-primary)] md:text-6xl"
@@ -92,7 +98,7 @@ export default function Navbar() {
 
                     {/* Hover underline animation */}
                     <span className="absolute -bottom-2 left-0 h-[2px] w-0 bg-[var(--accent-1)] transition-all duration-300 group-hover:w-full" />
-                  </a>
+                  </Link>
                 </motion.li>
               ))}
             </motion.ul>
