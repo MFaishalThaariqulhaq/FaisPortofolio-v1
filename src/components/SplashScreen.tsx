@@ -22,7 +22,8 @@ const BRAND_REVEAL_MS = 1020
 const EXIT_WIPE_MS = 760
 const REDUCED_EXIT_MS = 200
 
-function getGreetingSequence(reduced: boolean) {
+function getGreetingSequence(reduced: boolean, mobileLite: boolean) {
+  if (mobileLite) return GREETINGS.slice(0, 2)
   return reduced ? GREETINGS.slice(0, 3) : GREETINGS
 }
 
@@ -35,12 +36,13 @@ export default function SplashScreen({
   const [phase, setPhase] = useState<SplashPhase>("greetings")
   const [currentGreetingIndex, setCurrentGreetingIndex] = useState(0)
   const [isSkipping, setIsSkipping] = useState(false)
+  const [isMobileLite, setIsMobileLite] = useState(false)
   const sequenceTimeoutsRef = useRef<number[]>([])
   const finishTimeoutRef = useRef<number | null>(null)
 
   const greetingSequence = useMemo(
-    () => getGreetingSequence(Boolean(reduceMotion)),
-    [reduceMotion]
+    () => getGreetingSequence(Boolean(reduceMotion), isMobileLite),
+    [isMobileLite, reduceMotion]
   )
 
   useEffect(() => {
@@ -48,6 +50,16 @@ export default function SplashScreen({
     document.body.style.overflow = "hidden"
     return () => {
       document.body.style.overflow = previous
+    }
+  }, [])
+
+  useEffect(() => {
+    const mobileMedia = window.matchMedia("(max-width: 768px), (pointer: coarse)")
+    const syncMobileMode = () => setIsMobileLite(mobileMedia.matches)
+    syncMobileMode()
+    mobileMedia.addEventListener("change", syncMobileMode)
+    return () => {
+      mobileMedia.removeEventListener("change", syncMobileMode)
     }
   }, [])
 
@@ -69,11 +81,11 @@ export default function SplashScreen({
     clearSequenceTimers()
     clearFinishTimer()
 
-    const exitDuration = reduceMotion ? REDUCED_EXIT_MS : EXIT_WIPE_MS
+    const exitDuration = reduceMotion || isMobileLite ? REDUCED_EXIT_MS : EXIT_WIPE_MS
     finishTimeoutRef.current = window.setTimeout(() => {
       onFinish()
     }, exitDuration)
-  }, [clearFinishTimer, clearSequenceTimers, onFinish, reduceMotion])
+  }, [clearFinishTimer, clearSequenceTimers, isMobileLite, onFinish, reduceMotion])
 
   useEffect(() => {
     if (phase !== "greetings") return
@@ -133,14 +145,14 @@ export default function SplashScreen({
     >
       <div className="pointer-events-none absolute inset-0">
         <motion.div
-          animate={reduceMotion ? undefined : { opacity: [0.5, 0.85, 0.55], scale: [1, 1.08, 1] }}
-          transition={reduceMotion ? undefined : { duration: 3.6, repeat: Infinity, ease: "easeInOut" }}
+          animate={reduceMotion || isMobileLite ? undefined : { opacity: [0.5, 0.85, 0.55], scale: [1, 1.08, 1] }}
+          transition={reduceMotion || isMobileLite ? undefined : { duration: 3.6, repeat: Infinity, ease: "easeInOut" }}
           className="absolute -left-20 top-[-180px] h-[460px] w-[460px] rounded-full blur-3xl"
           style={{ backgroundColor: "var(--accent-1)", opacity: 0.14 }}
         />
         <motion.div
-          animate={reduceMotion ? undefined : { opacity: [0.46, 0.76, 0.5], scale: [1, 1.06, 1] }}
-          transition={reduceMotion ? undefined : { duration: 3.9, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
+          animate={reduceMotion || isMobileLite ? undefined : { opacity: [0.46, 0.76, 0.5], scale: [1, 1.06, 1] }}
+          transition={reduceMotion || isMobileLite ? undefined : { duration: 3.9, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
           className="absolute -right-24 bottom-[-210px] h-[520px] w-[520px] rounded-full blur-3xl"
           style={{ backgroundColor: "var(--accent-2)", opacity: 0.14 }}
         />
@@ -166,10 +178,10 @@ export default function SplashScreen({
               initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
               animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: [0.985, 1.01, 1] }}
               exit={{ opacity: 0 }}
-              transition={{ duration: reduceMotion ? 0.2 : 0.44, ease: "easeOut" }}
+              transition={{ duration: reduceMotion || isMobileLite ? 0.2 : 0.44, ease: "easeOut" }}
               className="text-[clamp(2rem,8vw,5.2rem)] font-semibold leading-tight tracking-tight text-[var(--text-primary)]"
             >
-              <AnimatedText text="FaisPortofolio-v1" reduceMotion={Boolean(reduceMotion)} />
+              {isMobileLite ? "FaisPortofolio-v1" : <AnimatedText text="FaisPortofolio-v1" reduceMotion={Boolean(reduceMotion)} />}
             </motion.h1>
           )}
         </AnimatePresence>
@@ -188,7 +200,7 @@ export default function SplashScreen({
 
       {phase === "exiting" && (
         <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
-          {reduceMotion ? (
+          {reduceMotion || isMobileLite ? (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
