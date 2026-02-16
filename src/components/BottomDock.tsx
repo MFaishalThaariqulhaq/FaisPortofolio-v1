@@ -1,6 +1,6 @@
 "use client"
 
-import { Home, User, Folder, Mail } from "lucide-react"
+import { Home, User, Folder, Mail, type LucideIcon } from "lucide-react"
 import {
   motion,
   useMotionTemplate,
@@ -13,32 +13,37 @@ import {
   useMemo,
   useRef,
   useState,
-  type ReactNode,
 } from "react"
 
 type DockItemConfig = {
   id: string
   href: string
   label: string
-  icon: ReactNode
+  icon: LucideIcon
 }
 
 const ITEMS: DockItemConfig[] = [
-  { id: "home", href: "#home", label: "Home", icon: <Home size={28} /> },
-  { id: "about", href: "#about", label: "About", icon: <User size={28} /> },
-  { id: "project", href: "#project", label: "Project", icon: <Folder size={28} /> },
-  { id: "contact", href: "#contact", label: "Contact", icon: <Mail size={28} /> },
+  { id: "home", href: "#home", label: "Home", icon: Home },
+  { id: "about", href: "#about", label: "About", icon: User },
+  { id: "project", href: "#project", label: "Project", icon: Folder },
+  { id: "contact", href: "#contact", label: "Contact", icon: Mail },
 ]
 
 export default function BottomDock() {
   const [activeSection, setActiveSection] = useState("home")
   const [isHoveringDock, setIsHoveringDock] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const mouseX = useMotionValue(Number.POSITIVE_INFINITY)
   const lampX = useMotionValue(0)
   const lampY = useMotionValue(0)
   const lampBg = useMotionTemplate`radial-gradient(140px circle at ${lampX}px ${lampY}px, rgba(34, 211, 238, 0.34), rgba(59, 130, 246, 0.13) 48%, rgba(59, 130, 246, 0) 74%)`
 
   useEffect(() => {
+    const mobileMedia = window.matchMedia("(max-width: 768px), (pointer: coarse)")
+    const syncMobile = () => setIsMobile(mobileMedia.matches)
+    syncMobile()
+    mobileMedia.addEventListener("change", syncMobile)
+
     const handleScroll = () => {
       const scrollY = window.scrollY + window.innerHeight * 0.35
 
@@ -57,6 +62,7 @@ export default function BottomDock() {
     window.addEventListener("scroll", handleScroll, { passive: true })
     window.addEventListener("resize", handleScroll)
     return () => {
+      mobileMedia.removeEventListener("change", syncMobile)
       window.removeEventListener("scroll", handleScroll)
       window.removeEventListener("resize", handleScroll)
     }
@@ -79,12 +85,12 @@ export default function BottomDock() {
           mouseX.set(Number.POSITIVE_INFINITY)
           setIsHoveringDock(false)
         }}
-        className="relative flex items-end gap-12 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-elev)]/80 px-11 py-5 shadow-2xl backdrop-blur-xl"
+        className="relative flex items-end gap-6 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-elev)]/80 px-5 py-3.5 shadow-2xl backdrop-blur-xl md:gap-12 md:px-11 md:py-5"
       >
         <motion.div
           aria-hidden="true"
           style={{ background: lampBg }}
-          animate={{ opacity: isHoveringDock ? 1 : 0 }}
+          animate={{ opacity: isHoveringDock && !isMobile ? 1 : 0 }}
           transition={{ duration: 0.2, ease: "easeOut" }}
           className="pointer-events-none absolute inset-0"
         />
@@ -96,6 +102,7 @@ export default function BottomDock() {
             label={item.label}
             icon={item.icon}
             active={activeSection === item.id}
+            isMobile={isMobile}
           />
         ))}
       </motion.div>
@@ -109,12 +116,14 @@ function DockItem({
   label,
   icon,
   active,
+  isMobile,
 }: {
   mouseX: ReturnType<typeof useMotionValue<number>>
   href: string
   label: string
-  icon: ReactNode
+  icon: LucideIcon
   active: boolean
+  isMobile: boolean
 }) {
   const ref = useRef<HTMLAnchorElement | null>(null)
 
@@ -124,18 +133,18 @@ function DockItem({
     return value - bounds.left - bounds.width / 2
   })
 
-  const scale = useSpring(useTransform(distance, [-140, 0, 140], [1, 1.8, 1]), {
+  const scale = useSpring(useTransform(distance, [-140, 0, 140], [1, isMobile ? 1 : 1.8, 1]), {
     stiffness: 280,
     damping: 20,
     mass: 0.2,
   })
-  const y = useSpring(useTransform(distance, [-140, 0, 140], [0, -12, 0]), {
+  const y = useSpring(useTransform(distance, [-140, 0, 140], [0, isMobile ? 0 : -12, 0]), {
     stiffness: 280,
     damping: 20,
     mass: 0.2,
   })
-  const iconOpacity = useTransform(scale, [1, 1.8], [0.75, 1])
-  const glowOpacity = useSpring(useTransform(distance, [-140, 0, 140], [0.15, 0.65, 0.15]), {
+  const iconOpacity = useTransform(scale, [1, 1.8], [0.84, 1])
+  const glowOpacity = useSpring(useTransform(distance, [-140, 0, 140], [0.12, isMobile ? 0.2 : 0.65, 0.12]), {
     stiffness: 260,
     damping: 24,
     mass: 0.25,
@@ -143,6 +152,7 @@ function DockItem({
 
   const dotScale = useMemo(() => (active ? 1 : 0.4), [active])
   const dotOpacity = useMemo(() => (active ? 1 : 0.3), [active])
+  const Icon = icon as LucideIcon
 
   return (
     <a
@@ -159,14 +169,14 @@ function DockItem({
       />
       <motion.div
         style={{ scale, y, opacity: iconOpacity }}
-        whileTap={{ scale: 0.9 }}
+        whileTap={{ scale: isMobile ? 0.95 : 0.9 }}
         className="relative cursor-pointer"
       >
-        {icon}
+        <Icon size={isMobile ? 20 : 28} />
         <motion.span
           animate={{ scale: dotScale, opacity: dotOpacity }}
           transition={{ duration: 0.2, ease: "easeOut" }}
-          className="absolute -bottom-2 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-[var(--accent-1)]"
+          className="absolute -bottom-1.5 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-[var(--accent-1)] md:-bottom-2"
         />
       </motion.div>
     </a>

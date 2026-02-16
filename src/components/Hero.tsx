@@ -46,7 +46,7 @@ export default function Hero() {
   const [stickers, setStickers] = useState<StickerState[]>([])
   const isHeroInView = useInView(heroRef, { once: false, amount: 0.55 })
   const reduceMotion = useReducedMotion()
-  const isStickerAnimationEnabled = Boolean(isDesktopPointer && isHeroInView && !reduceMotion)
+  const isStickerAnimationEnabled = Boolean(isHeroInView && !reduceMotion)
 
   const pushStickerAway = (stickerId: number, source: Point, timestamp: number) => {
     stickersRef.current = stickersRef.current.map((sticker) => {
@@ -226,7 +226,7 @@ export default function Hero() {
 
   const handlePointerMove = (event: PointerEvent<HTMLElement>) => {
     const hero = heroRef.current
-    if (!hero || !isStickerAnimationEnabled) return
+    if (!hero || !isStickerAnimationEnabled || !isDesktopPointer) return
     const heroRect = hero.getBoundingClientRect()
     pointerRef.current = {
       x: event.clientX - heroRect.left,
@@ -249,6 +249,22 @@ export default function Hero() {
       x: sticker.x + sticker.size / 2,
       y: sticker.y + sticker.size / 2,
     }, event.timeStamp)
+  }
+
+  const handleStickerPointerDown = (stickerId: number, event: PointerEvent<HTMLImageElement>) => {
+    const hero = heroRef.current
+    const sticker = stickersRef.current.find((item) => item.id === stickerId)
+    if (!hero || !sticker) return
+
+    const heroRect = hero.getBoundingClientRect()
+    pushStickerAway(
+      stickerId,
+      {
+        x: event.clientX - heroRect.left,
+        y: event.clientY - heroRect.top,
+      },
+      event.timeStamp
+    )
   }
 
   return (
@@ -315,6 +331,7 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           transition={{ duration: 0.35 }}
           onClick={(event) => handleStickerClick(sticker.id, event)}
+          onPointerDown={(event) => handleStickerPointerDown(sticker.id, event)}
         />
       ))}
     </section>
