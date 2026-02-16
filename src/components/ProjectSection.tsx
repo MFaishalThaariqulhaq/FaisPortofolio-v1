@@ -40,14 +40,18 @@ export default function ProjectSection() {
           href={PROJECT_LINK}
           className="group mt-8 inline-block select-none"
           aria-label="Tap or click to view my projects"
-          initial={useLiteAnimation ? { opacity: 0, y: 24 } : { opacity: 0, y: -60, filter: "blur(6px)" }}
+          initial={
+            useLiteAnimation
+              ? { opacity: 0, y: 24, filter: "blur(0px)" }
+              : { opacity: 0, y: -60, filter: "blur(6px)" }
+          }
           animate={
             isInView
               ? useLiteAnimation
-                ? { opacity: 1, y: 0 }
+                ? { opacity: 1, y: 0, filter: "blur(0px)" }
                 : { opacity: 1, y: 0, filter: "blur(0px)" }
               : useLiteAnimation
-                ? { opacity: 0 }
+                ? { opacity: 0, filter: "blur(0px)" }
                 : { opacity: 0, y: -60, filter: "blur(6px)" }
           }
           transition={
@@ -160,14 +164,14 @@ function AnimatedText({
       {text.split("").map((char, index) => (
         <motion.span
           key={`${text}-${index}`}
-          initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -90, filter: "blur(8px)" }}
+          initial={reduceMotion ? { opacity: 0, filter: "blur(0px)" } : { opacity: 0, y: -90, filter: "blur(8px)" }}
           animate={
             isInView
               ? reduceMotion
-                ? { opacity: 1 }
+                ? { opacity: 1, filter: "blur(0px)" }
                 : { opacity: 1, y: 0, filter: "blur(0px)" }
               : reduceMotion
-                ? { opacity: 0 }
+                ? { opacity: 0, filter: "blur(0px)" }
                 : { opacity: 0, y: -90, filter: "blur(8px)" }
           }
           transition={{
