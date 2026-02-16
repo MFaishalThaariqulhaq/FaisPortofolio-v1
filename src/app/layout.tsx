@@ -24,10 +24,10 @@ const themeInitScript = `
   try {
     const key = "fais_theme";
     const stored = localStorage.getItem(key);
-    const mode = stored === "light" || stored === "dark" ? stored : "dark";
+    const mode = stored === "light" || stored === "dark" ? stored : "light";
     document.documentElement.setAttribute("data-theme", mode);
   } catch {
-    document.documentElement.setAttribute("data-theme", "dark");
+    document.documentElement.setAttribute("data-theme", "light");
   }
 })();
 `;
