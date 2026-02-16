@@ -10,8 +10,8 @@ import ProjectSection from "@/components/ProjectSection"
 import ContactSection from "@/components/ContactSection"
 import SplashScreen from "@/components/SplashScreen"
 
-const RELOAD_SPLASH_SHOWN_FLAG = "__faisReloadSplashShown"
 const SKIP_SPLASH_ONCE_FLAG = "__faisSkipSplashOnce"
+const LANDING_SPLASH_SHOWN_FLAG = "__faisLandingSplashShown"
 const HASH_SCROLL_RETRY_MAX = 12
 const HASH_SCROLL_RETRY_MS = 60
 
@@ -24,15 +24,16 @@ export default function Home() {
       const nav = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined
       const isReload = nav?.type === "reload"
       const skipSplashOnce = window.sessionStorage.getItem(SKIP_SPLASH_ONCE_FLAG) === "1"
-      const alreadyShown = Boolean(
-        (window as Window & { [RELOAD_SPLASH_SHOWN_FLAG]?: boolean })[RELOAD_SPLASH_SHOWN_FLAG]
-      )
+      const landingSplashShown = window.sessionStorage.getItem(LANDING_SPLASH_SHOWN_FLAG) === "1"
 
       if (skipSplashOnce) {
         window.sessionStorage.removeItem(SKIP_SPLASH_ONCE_FLAG)
         setShowSplash(false)
-      } else if (isReload && !alreadyShown) {
-        ;(window as Window & { [RELOAD_SPLASH_SHOWN_FLAG]?: boolean })[RELOAD_SPLASH_SHOWN_FLAG] = true
+      } else if (isReload) {
+        window.sessionStorage.setItem(LANDING_SPLASH_SHOWN_FLAG, "1")
+        setShowSplash(true)
+      } else if (!landingSplashShown) {
+        window.sessionStorage.setItem(LANDING_SPLASH_SHOWN_FLAG, "1")
         setShowSplash(true)
       } else {
         setShowSplash(false)
