@@ -16,7 +16,7 @@ export default function Navbar() {
   const brandHref = isHome ? "/" : "/#about"
   const menuItems = [
     { label: "Home", href: "/#home" },
-    { label: "About", href: isHome ? "/#about" : "/about" },
+    { label: "About", href: "/#about" },
     { label: "Project", href: "/#project" },
     { label: "Contact", href: "/#contact" },
   ]
