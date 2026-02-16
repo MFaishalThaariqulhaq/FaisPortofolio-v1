@@ -53,7 +53,7 @@ export default function ContactSection() {
   const leftRef = useRef<HTMLDivElement | null>(null)
   const rightRef = useRef<HTMLDivElement | null>(null)
   const reduceMotion = useReducedMotion()
-  const isLeftInView = useInView(leftRef, { once: false, amount: 0.45 })
+  const isLeftInView = useInView(leftRef, { once: false, amount: 0.46 })
   const isRightInView = useInView(rightRef, { once: false, amount: 0.35 })
 
   return (
@@ -65,35 +65,79 @@ export default function ContactSection() {
       <div className="mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[1fr_1fr]">
         <motion.div
           ref={leftRef}
-          initial={reduceMotion ? undefined : { opacity: 0, y: 18 }}
+          initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 14 }}
           animate={
             reduceMotion
-              ? undefined
+              ? { opacity: isLeftInView ? 1 : 0 }
               : isLeftInView
                 ? { opacity: 1, y: 0 }
-                : { opacity: 0, y: 18 }
+                : { opacity: 0, y: 14 }
           }
-          transition={{ duration: 0.5, ease: "easeOut" }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
         >
-          <h2 className="text-[clamp(2.3rem,7vw,6rem)] font-semibold leading-[1.03] tracking-tight text-[var(--text-primary)]/95">
-            Get In Touch
-          </h2>
+          <div>
+            <motion.h2
+              initial={false}
+              animate={
+                reduceMotion
+                  ? { opacity: isLeftInView ? 1 : 0 }
+                  : isLeftInView
+                    ? { opacity: 1, y: 0 }
+                    : { opacity: 0, y: 18 }
+              }
+              transition={{ duration: 0.45, ease: "easeOut", delay: 0.03 }}
+              className="text-[clamp(2.3rem,7vw,6rem)] font-semibold leading-[1.03] tracking-tight text-[var(--text-primary)]/95"
+            >
+              Get In Touch
+            </motion.h2>
 
-          <div className="mt-5">
-            <span className="block h-[4px] w-20 rounded-full bg-[var(--accent-soft)]" />
-            <span className="mt-2 ml-8 block h-[4px] w-24 rounded-full bg-[var(--accent-soft)]" />
+            <motion.div
+              initial={false}
+              animate={
+                reduceMotion
+                  ? { opacity: isLeftInView ? 1 : 0 }
+                  : isLeftInView
+                    ? { opacity: 1, y: 0 }
+                    : { opacity: 0, y: 16 }
+              }
+              transition={{ duration: 0.45, ease: "easeOut", delay: 0.1 }}
+              className="mt-5"
+            >
+              <span className="block h-[4px] w-20 rounded-full bg-[var(--accent-soft)]" />
+              <span className="mt-2 ml-8 block h-[4px] w-24 rounded-full bg-[var(--accent-soft)]" />
+            </motion.div>
+
+            <motion.p
+              initial={false}
+              animate={
+                reduceMotion
+                  ? { opacity: isLeftInView ? 1 : 0 }
+                  : isLeftInView
+                    ? { opacity: 1, y: 0 }
+                    : { opacity: 0, y: 14 }
+              }
+              transition={{ duration: 0.45, ease: "easeOut", delay: 0.17 }}
+              className="mt-9 max-w-xl text-[clamp(1rem,2.1vw,1.9rem)] leading-relaxed text-[var(--text-secondary)]"
+            >
+              Feel free to contact me if you have any questions or just want to say hi.
+            </motion.p>
+
+            <motion.a
+              initial={false}
+              animate={
+                reduceMotion
+                  ? { opacity: isLeftInView ? 1 : 0 }
+                  : isLeftInView
+                    ? { opacity: 1, y: 0 }
+                    : { opacity: 0, y: 12 }
+              }
+              transition={{ duration: 0.45, ease: "easeOut", delay: 0.24 }}
+              href={`mailto:${CONTACT_EMAIL}`}
+              className="mt-9 inline-block rounded-md text-xl text-[var(--text-secondary)] transition-colors duration-200 hover:text-[var(--text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-2)] md:text-3xl"
+            >
+              {CONTACT_EMAIL}
+            </motion.a>
           </div>
-
-          <p className="mt-9 max-w-xl text-[clamp(1rem,2.1vw,1.9rem)] leading-relaxed text-[var(--text-secondary)]">
-            Feel free to contact me if you have any questions or just want to say hi.
-          </p>
-
-          <a
-            href={`mailto:${CONTACT_EMAIL}`}
-            className="mt-9 inline-block rounded-md text-xl text-[var(--text-secondary)] transition-colors duration-200 hover:text-[var(--text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-2)] md:text-3xl"
-          >
-            {CONTACT_EMAIL}
-          </a>
 
           <div className="mt-9 flex flex-wrap items-center gap-3">
             {SOCIAL_LINKS.map((item) => (
