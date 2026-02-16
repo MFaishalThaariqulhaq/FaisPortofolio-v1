@@ -10,7 +10,10 @@ import ProjectSection from "@/components/ProjectSection"
 import ContactSection from "@/components/ContactSection"
 import SplashScreen from "@/components/SplashScreen"
 
-const SPLASH_SESSION_KEY = "fais_splash_seen_v1"
+const RELOAD_SPLASH_SHOWN_FLAG = "__faisReloadSplashShown"
+const SKIP_SPLASH_ONCE_FLAG = "__faisSkipSplashOnce"
+const HASH_SCROLL_RETRY_MAX = 12
+const HASH_SCROLL_RETRY_MS = 60
 
 export default function Home() {
   const [showSplash, setShowSplash] = useState(false)
@@ -20,10 +23,20 @@ export default function Home() {
     const frameId = window.requestAnimationFrame(() => {
       const nav = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined
       const isReload = nav?.type === "reload"
-      const hasSeenSplash = sessionStorage.getItem(SPLASH_SESSION_KEY) === "1"
-      const shouldShowSplash = isReload || !hasSeenSplash
+      const skipSplashOnce = window.sessionStorage.getItem(SKIP_SPLASH_ONCE_FLAG) === "1"
+      const alreadyShown = Boolean(
+        (window as Window & { [RELOAD_SPLASH_SHOWN_FLAG]?: boolean })[RELOAD_SPLASH_SHOWN_FLAG]
+      )
 
-      setShowSplash(shouldShowSplash)
+      if (skipSplashOnce) {
+        window.sessionStorage.removeItem(SKIP_SPLASH_ONCE_FLAG)
+        setShowSplash(false)
+      } else if (isReload && !alreadyShown) {
+        ;(window as Window & { [RELOAD_SPLASH_SHOWN_FLAG]?: boolean })[RELOAD_SPLASH_SHOWN_FLAG] = true
+        setShowSplash(true)
+      } else {
+        setShowSplash(false)
+      }
       setIsSplashReady(true)
     })
 
@@ -32,8 +45,42 @@ export default function Home() {
     }
   }, [])
 
+  useEffect(() => {
+    if (!isSplashReady) return
+
+    const hash = window.location.hash
+    if (!hash || hash === "#home") return
+
+    const targetId = decodeURIComponent(hash.slice(1))
+
+    const scrollToHashTarget = () => {
+      const target = document.getElementById(targetId)
+      if (!target) return false
+
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      target.scrollIntoView({
+        behavior: prefersReducedMotion ? "auto" : "smooth",
+        block: "start",
+      })
+      return true
+    }
+
+    if (scrollToHashTarget()) return
+
+    let attempts = 0
+    const timer = window.setInterval(() => {
+      attempts += 1
+      if (scrollToHashTarget() || attempts >= HASH_SCROLL_RETRY_MAX) {
+        window.clearInterval(timer)
+      }
+    }, HASH_SCROLL_RETRY_MS)
+
+    return () => {
+      window.clearInterval(timer)
+    }
+  }, [isSplashReady])
+
   const handleSplashFinish = useCallback(() => {
-    sessionStorage.setItem(SPLASH_SESSION_KEY, "1")
     setShowSplash(false)
   }, [])
 

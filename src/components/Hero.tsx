@@ -1,7 +1,7 @@
 "use client"
 
 import { motion, useInView } from "framer-motion"
-import { useEffect, useRef, useState, type PointerEvent } from "react"
+import { useEffect, useRef, useState, type MouseEvent, type PointerEvent } from "react"
 
 type Point = { x: number; y: number }
 type StickerState = {
@@ -235,7 +235,7 @@ export default function Hero() {
 
   const handleStickerClick = (
     stickerId: number,
-    event: PointerEvent<HTMLImageElement>
+    event: MouseEvent<HTMLImageElement>
   ) => {
     const sticker = stickersRef.current.find((item) => item.id === stickerId)
     if (!sticker) return

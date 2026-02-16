@@ -45,7 +45,7 @@ export default function ProjectSection() {
             <AnimatedText
               text={PREFIX}
               baseDelay={0}
-              reduceMotion={reduceMotion}
+              reduceMotion={Boolean(reduceMotion)}
               isInView={isInView}
             />
             <span className="inline-block w-[0.45em]" />
@@ -54,7 +54,7 @@ export default function ProjectSection() {
                 <AnimatedText
                   text={EMPHASIS}
                   baseDelay={180}
-                  reduceMotion={reduceMotion}
+                  reduceMotion={Boolean(reduceMotion)}
                   isInView={isInView}
                   expressive
                   className="transition-[filter,opacity,letter-spacing] duration-300 ease-out brightness-100 group-hover:brightness-110 group-hover:tracking-[0.02em]"
@@ -101,7 +101,7 @@ export default function ProjectSection() {
                 <AnimatedText
                   text={SUFFIX}
                   baseDelay={340}
-                  reduceMotion={reduceMotion}
+                  reduceMotion={Boolean(reduceMotion)}
                   isInView={isInView}
                 />
               </>

@@ -6,10 +6,13 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import ThemeToggle from "@/components/ThemeToggle"
 
+const SKIP_SPLASH_ONCE_FLAG = "__faisSkipSplashOnce"
+
 export default function Navbar() {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
   const isHome = pathname === "/"
+  const brandHref = isHome ? "/" : "/#about"
 
   const toSection = (hash: string) => (isHome ? hash : `/${hash}`)
 
@@ -20,12 +23,34 @@ export default function Navbar() {
     { label: "Contact", href: toSection("#contact") },
   ]
 
+  const handleBrandClick = () => {
+    if (isHome) return
+    window.sessionStorage.setItem(SKIP_SPLASH_ONCE_FLAG, "1")
+  }
+
+  const handleMenuLinkClick = () => {
+    if (!isHome) {
+      window.sessionStorage.setItem(SKIP_SPLASH_ONCE_FLAG, "1")
+    }
+    setOpen(false)
+  }
+
   return (
     <>
       {/* NAVBAR */}
       <nav className="fixed top-0 left-0 z-50 flex w-full items-center justify-between px-8 py-8 md:px-16">
-        <Link href="/" className="text-lg font-medium tracking-wider text-[var(--text-primary)]">
-          Faishal
+        <Link
+          href={brandHref}
+          onClick={handleBrandClick}
+          className="inline-flex items-center gap-2 text-lg font-medium tracking-wider text-[var(--text-primary)] transition hover:text-[var(--text-secondary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-2)]"
+          aria-label={isHome ? "Go to home" : "Back to previous section"}
+        >
+          {!isHome && (
+            <span aria-hidden="true" className="text-base leading-none">
+              &lt;
+            </span>
+          )}
+          <span>Faishal</span>
         </Link>
 
         <div className="flex items-center gap-3">
@@ -91,7 +116,7 @@ export default function Navbar() {
                 >
                   <Link
                     href={item.href}
-                    onClick={() => setOpen(false)}
+                    onClick={handleMenuLinkClick}
                     className="group relative text-4xl font-semibold tracking-wide text-[var(--text-primary)] md:text-6xl"
                   >
                     {item.label}

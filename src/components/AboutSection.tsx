@@ -1,25 +1,35 @@
 "use client"
 
 import {
+  AnimatePresence,
   motion,
   useInView,
   useMotionTemplate,
   useMotionValue,
   useSpring,
 } from "framer-motion"
+import { useRouter } from "next/navigation"
 import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react"
+import {
+  FlipButton,
+  FlipButtonBack,
+  FlipButtonFront,
+} from "@/components/animate-ui/components/buttons/flip"
 
 const ABOUT_PHOTO = "/about-photo.jpg"
 const PHOTO_TILT_X_MAX = 8
 const PHOTO_TILT_Y_MAX = 10
+const ABOUT_TRANSITION_MS = 780
 
 export default function AboutSection() {
+  const router = useRouter()
   const sectionRef = useRef<HTMLElement | null>(null)
   const leftRef = useRef<HTMLDivElement | null>(null)
   const rightRef = useRef<HTMLDivElement | null>(null)
   const photoCardRef = useRef<HTMLDivElement | null>(null)
   const [isDesktopPointer, setIsDesktopPointer] = useState(false)
   const [reduceMotion, setReduceMotion] = useState(false)
+  const [isAboutLoading, setIsAboutLoading] = useState(false)
   const lampX = useMotionValue(0)
   const lampY = useMotionValue(0)
   const lampCardX = useMotionValue(0)
@@ -108,6 +118,14 @@ export default function AboutSection() {
     centerLamp()
   }
 
+  const handleAboutNavigation = () => {
+    if (isAboutLoading) return
+    setIsAboutLoading(true)
+    window.setTimeout(() => {
+      router.push("/about")
+    }, reduceMotion ? 220 : ABOUT_TRANSITION_MS)
+  }
+
   return (
     <section
       id="about"
@@ -138,6 +156,35 @@ export default function AboutSection() {
             I build responsive websites, explore mobile experiences, and experiment with AI-driven products
             to create practical solutions with engaging user experience.
           </p>
+          <motion.div
+            initial={reduceMotion ? undefined : { opacity: 0, y: 14 }}
+            animate={
+              reduceMotion
+                ? undefined
+                : isLeftInView
+                  ? { opacity: 1, y: 0 }
+                  : { opacity: 0, y: 14 }
+            }
+            transition={{ duration: 0.4, ease: "easeOut", delay: 0.12 }}
+            className="mt-7"
+          >
+            <FlipButton
+              type="button"
+              from="top"
+              disabled={isAboutLoading}
+              onClick={handleAboutNavigation}
+              className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-2)] disabled:pointer-events-none disabled:opacity-65"
+            >
+              <FlipButtonFront className="rounded-full border border-[var(--border-subtle)] bg-[var(--accent-2)] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_28px_rgba(0,0,0,0.2)]">
+                <span>About Me</span>
+                <span aria-hidden="true">-&gt;</span>
+              </FlipButtonFront>
+              <FlipButtonBack className="rounded-full border border-[var(--border-subtle)] bg-[var(--accent-2)]/90 px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_28px_rgba(0,0,0,0.2)]">
+                <span>About Me</span>
+                <span aria-hidden="true">-&gt;</span>
+              </FlipButtonBack>
+            </FlipButton>
+          </motion.div>
 
         </motion.div>
 
@@ -214,6 +261,32 @@ export default function AboutSection() {
           </motion.div>
         </motion.div>
       </div>
+
+      <AnimatePresence>
+        {isAboutLoading && (
+          <motion.div
+            initial={reduceMotion ? { opacity: 0 } : { opacity: 0, backdropFilter: "blur(0px)" }}
+            animate={reduceMotion ? { opacity: 1 } : { opacity: 1, backdropFilter: "blur(6px)" }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: reduceMotion ? 0.12 : 0.2, ease: "easeOut" }}
+            className="fixed inset-0 z-[160] flex items-center justify-center bg-[var(--bg-page)]/92"
+          >
+            <motion.h3
+              initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 10, filter: "blur(4px)" }}
+              animate={
+                reduceMotion
+                  ? { opacity: 1 }
+                  : { opacity: 1, y: 0, filter: "blur(0px)", letterSpacing: ["0.02em", "0.1em", "0.02em"] }
+              }
+              transition={reduceMotion ? { duration: 0.14 } : { duration: 0.52, ease: "easeOut" }}
+              className="text-[clamp(1.25rem,4vw,2.6rem)] font-semibold uppercase tracking-[0.08em] text-[var(--text-primary)]"
+            >
+              faisporto-v1
+            </motion.h3>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   )
 }
+

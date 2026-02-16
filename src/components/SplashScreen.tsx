@@ -169,7 +169,7 @@ export default function SplashScreen({
               transition={{ duration: reduceMotion ? 0.2 : 0.44, ease: "easeOut" }}
               className="text-[clamp(2rem,8vw,5.2rem)] font-semibold leading-tight tracking-tight text-[var(--text-primary)]"
             >
-              <AnimatedText text="FaisPortofolio-v1" reduceMotion={reduceMotion} />
+              <AnimatedText text="FaisPortofolio-v1" reduceMotion={Boolean(reduceMotion)} />
             </motion.h1>
           )}
         </AnimatePresence>
