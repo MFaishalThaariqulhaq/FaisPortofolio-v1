@@ -42,6 +42,7 @@ export default function AboutSection() {
   const photoRevealMask = useMotionTemplate`radial-gradient(250px circle at ${lampCardX}px ${lampCardY}px, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.92) 38%, rgba(255, 255, 255, 0.46) 63%, rgba(0, 0, 0, 0) 84%)`
   const isLeftInView = useInView(leftRef, { once: false, amount: 0.45 })
   const isRightInView = useInView(rightRef, { once: false, amount: 0.35 })
+  const canRunAmbientAnimation = isRightInView && isDesktopPointer && !reduceMotion
 
   const setLampByClient = useCallback((clientX: number, clientY: number) => {
     const section = sectionRef.current
@@ -224,18 +225,22 @@ export default function AboutSection() {
               style={{ backgroundImage: `url('${ABOUT_PHOTO}')` }}
               className="absolute inset-0 bg-cover bg-center"
               animate={
-                reduceMotion
-                  ? undefined
-                  : {
+                canRunAmbientAnimation
+                  ? {
                       scale: [1.04, 1.08, 1.04],
                       x: [0, -7, 0],
                       y: [0, -4, 0],
                     }
+                  : {
+                      scale: 1.02,
+                      x: 0,
+                      y: 0,
+                    }
               }
               transition={
-                reduceMotion
-                  ? undefined
-                  : { duration: 8.5, repeat: Infinity, ease: "easeInOut" }
+                canRunAmbientAnimation
+                  ? { duration: 8.5, repeat: Infinity, ease: "easeInOut" }
+                  : { duration: 0.25, ease: "easeOut" }
               }
             />
             <motion.div
@@ -251,11 +256,11 @@ export default function AboutSection() {
             <motion.div
               aria-hidden="true"
               className="pointer-events-none absolute -inset-y-12 -left-1/2 w-1/2 bg-gradient-to-r from-transparent via-white/28 to-transparent"
-              animate={reduceMotion ? undefined : { x: ["-120%", "290%"] }}
+              animate={canRunAmbientAnimation ? { x: ["-120%", "290%"] } : { x: "-120%" }}
               transition={
-                reduceMotion
-                  ? undefined
-                  : { duration: 2.8, repeat: Infinity, ease: "easeInOut", repeatDelay: 1.6 }
+                canRunAmbientAnimation
+                  ? { duration: 2.8, repeat: Infinity, ease: "easeInOut", repeatDelay: 1.6 }
+                  : { duration: 0.2, ease: "linear" }
               }
             />
           </motion.div>
@@ -265,18 +270,18 @@ export default function AboutSection() {
       <AnimatePresence>
         {isAboutLoading && (
           <motion.div
-            initial={reduceMotion ? { opacity: 0 } : { opacity: 0, backdropFilter: "blur(0px)" }}
-            animate={reduceMotion ? { opacity: 1 } : { opacity: 1, backdropFilter: "blur(6px)" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: reduceMotion ? 0.12 : 0.2, ease: "easeOut" }}
             className="fixed inset-0 z-[160] flex items-center justify-center bg-[var(--bg-page)]/92"
           >
             <motion.h3
-              initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 10, filter: "blur(4px)" }}
+              initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 10 }}
               animate={
                 reduceMotion
                   ? { opacity: 1 }
-                  : { opacity: 1, y: 0, filter: "blur(0px)", letterSpacing: ["0.02em", "0.1em", "0.02em"] }
+                  : { opacity: 1, y: 0, letterSpacing: ["0.02em", "0.1em", "0.02em"] }
               }
               transition={reduceMotion ? { duration: 0.14 } : { duration: 0.52, ease: "easeOut" }}
               className="text-[clamp(1.25rem,4vw,2.6rem)] font-semibold uppercase tracking-[0.08em] text-[var(--text-primary)]"

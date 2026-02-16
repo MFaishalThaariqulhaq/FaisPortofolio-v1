@@ -1,6 +1,6 @@
 "use client"
 
-import { motion, useInView } from "framer-motion"
+import { motion, useInView, useReducedMotion } from "framer-motion"
 import { useEffect, useRef, useState, type MouseEvent, type PointerEvent } from "react"
 
 type Point = { x: number; y: number }
@@ -45,6 +45,8 @@ export default function Hero() {
   const [isDesktopPointer, setIsDesktopPointer] = useState(false)
   const [stickers, setStickers] = useState<StickerState[]>([])
   const isHeroInView = useInView(heroRef, { once: false, amount: 0.55 })
+  const reduceMotion = useReducedMotion()
+  const isStickerAnimationEnabled = Boolean(isDesktopPointer && isHeroInView && !reduceMotion)
 
   const pushStickerAway = (stickerId: number, source: Point, timestamp: number) => {
     stickersRef.current = stickersRef.current.map((sticker) => {
@@ -149,6 +151,8 @@ export default function Hero() {
   }, [])
 
   useEffect(() => {
+    if (!isStickerAnimationEnabled) return
+
     const tick = (now: number) => {
       const hero = heroRef.current
       if (!hero) return
@@ -165,7 +169,7 @@ export default function Hero() {
         let { x, y, vx, vy, rotate, lastEscapeAt } = sticker
         const { size, rotateSpeed } = sticker
 
-        if (isDesktopPointer && pointer) {
+        if (pointer) {
           const centerX = x + size / 2
           const centerY = y + size / 2
           const dx = centerX - pointer.x
@@ -216,12 +220,13 @@ export default function Hero() {
     return () => {
       if (frameRef.current !== null) window.cancelAnimationFrame(frameRef.current)
       prevTimeRef.current = null
+      frameRef.current = null
     }
-  }, [isDesktopPointer])
+  }, [isStickerAnimationEnabled])
 
   const handlePointerMove = (event: PointerEvent<HTMLElement>) => {
     const hero = heroRef.current
-    if (!hero || !isDesktopPointer) return
+    if (!hero || !isStickerAnimationEnabled) return
     const heroRect = hero.getBoundingClientRect()
     pointerRef.current = {
       x: event.clientX - heroRect.left,

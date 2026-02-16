@@ -113,7 +113,7 @@ export default function SplashScreen({
     <motion.div
       initial={{ opacity: 1 }}
       animate={{ opacity: 1 }}
-      exit={reduceMotion ? { opacity: 0 } : { opacity: 0, filter: "blur(6px)" }}
+      exit={{ opacity: 0 }}
       transition={{ duration: reduceMotion ? 0.2 : 0.42, ease: "easeOut" }}
       className="fixed inset-0 z-[200] flex cursor-pointer items-center justify-center overflow-hidden bg-[var(--splash-bg)]"
       onClick={() => {
@@ -152,9 +152,9 @@ export default function SplashScreen({
             <motion.h1
               key={`greeting-${currentGreetingIndex}`}
               dir={currentGreeting?.dir ?? "ltr"}
-              initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 18, filter: "blur(8px)" }}
-              animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
-              exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -12, scale: 0.98, filter: "blur(10px)" }}
+              initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 18 }}
+              animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
+              exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -12, scale: 0.98 }}
               transition={{ duration: reduceMotion ? 0.16 : 0.22, ease: "easeOut" }}
               className="text-[clamp(2.2rem,9vw,5.6rem)] font-semibold leading-tight tracking-tight text-[var(--text-primary)]"
             >
@@ -292,8 +292,8 @@ function AnimatedText({
       {text.split("").map((char, index) => (
         <motion.span
           key={`${text}-${index}`}
-          initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -90, filter: "blur(8px)" }}
-          animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, filter: "blur(0px)" }}
+          initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -90 }}
+          animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
           transition={{
             duration: reduceMotion ? 0.2 : 0.52,
             ease: [0.22, 1, 0.36, 1],

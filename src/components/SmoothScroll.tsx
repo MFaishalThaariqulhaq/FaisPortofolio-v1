@@ -9,14 +9,12 @@ export default function SmoothScroll() {
     if (prefersReducedMotion.matches) return
 
     const lenis = new Lenis({
-      duration: 0.95,
+      duration: 0.72,
       smoothWheel: true,
-      wheelMultiplier: 0.9,
-      touchMultiplier: 1.05,
-      lerp: 0.08,
+      wheelMultiplier: 0.86,
+      touchMultiplier: 1,
+      lerp: 0.11,
     })
-    const finePointer = window.matchMedia("(pointer: fine)")
-    let lastSnapAt = 0
 
     let rafId = 0
     const raf = (time: number) => {
@@ -39,48 +37,14 @@ export default function SmoothScroll() {
       if (!section) return
 
       event.preventDefault()
-      lenis.scrollTo(section, { duration: 0.95, offset: 0 })
-    }
-
-    const onWheel = (event: WheelEvent) => {
-      if (!finePointer.matches) return
-      if (event.ctrlKey || Math.abs(event.deltaY) < 6) return
-
-      const now = Date.now()
-      if (now - lastSnapAt < 650) {
-        event.preventDefault()
-        return
-      }
-
-      const sections = Array.from(
-        document.querySelectorAll<HTMLElement>("section[id]")
-      ).sort((a, b) => a.offsetTop - b.offsetTop)
-      if (sections.length === 0) return
-
-      const currentY = window.scrollY + 24
-      let currentIndex = 0
-      for (let i = 0; i < sections.length; i += 1) {
-        if (sections[i].offsetTop <= currentY) currentIndex = i
-      }
-
-      const nextIndex =
-        event.deltaY > 0
-          ? Math.min(currentIndex + 1, sections.length - 1)
-          : Math.max(currentIndex - 1, 0)
-      if (nextIndex === currentIndex) return
-
-      event.preventDefault()
-      lastSnapAt = now
-      lenis.scrollTo(sections[nextIndex], { duration: 0.85, offset: 0 })
+      lenis.scrollTo(section, { duration: 0.7, offset: 0 })
     }
 
     document.addEventListener("click", onHashLinkClick)
-    window.addEventListener("wheel", onWheel, { passive: false })
 
     return () => {
       window.cancelAnimationFrame(rafId)
       document.removeEventListener("click", onHashLinkClick)
-      window.removeEventListener("wheel", onWheel)
       lenis.destroy()
     }
   }, [])
