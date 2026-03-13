@@ -170,6 +170,30 @@ body::-webkit-scrollbar {
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+@keyframes about-photo-rotate {
+  0% {
+    transform: rotateY(0deg);
+  }
+  45% {
+    transform: rotateY(180deg);
+  }
+  55% {
+    transform: rotateY(180deg);
+  }
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+
+.about-rotate-wrap {
+  perspective: 1200px;
+}
+
+.about-rotate {
+  animation: about-photo-rotate 14s ease-in-out infinite;
+  transform-style: preserve-3d;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
