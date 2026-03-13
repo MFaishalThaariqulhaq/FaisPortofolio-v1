@@ -38,9 +38,13 @@ export default function Hero() {
           transition={{ delay: 0.75, duration: 0.45 }}
           className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3"
         >
-          <span className="inline-flex items-center justify-center rounded-full border border-[var(--border-subtle)] bg-[var(--text-primary)]/70 px-6 py-3 text-sm font-semibold text-[var(--bg-page)]/75">
-            CV Soon
-          </span>
+          <a
+            href="/cv/cv-faishal-thariqulhaq.pdf"
+            className="inline-flex items-center justify-center rounded-full border border-[var(--border-subtle)] bg-[var(--text-primary)]/70 px-6 py-3 text-sm font-semibold text-[var(--bg-page)]/75 transition-colors duration-200 hover:bg-[var(--text-primary)]/90"
+            download
+          >
+            Download CV
+          </a>
           <a
             href="#contact"
             className="inline-flex items-center justify-center rounded-full border border-[var(--border-subtle)] px-6 py-3 text-sm font-semibold text-[var(--text-primary)] transition-colors duration-200 hover:bg-[var(--accent-soft)]"

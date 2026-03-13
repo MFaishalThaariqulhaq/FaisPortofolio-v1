@@ -130,20 +130,10 @@ body::-webkit-scrollbar {
   display: none;
 }
 
-html[data-theme="dark"] .theme-icon-light {
-  display: none;
-}
-
-html[data-theme="dark"] .theme-icon-dark {
-  display: block;
-}
-
-html[data-theme="light"] .theme-icon-light {
-  display: block;
-}
-
-html[data-theme="light"] .theme-icon-dark {
-  display: none;
+.theme-transition,
+.theme-transition * {
+  transition: background-color 300ms ease, color 300ms ease, border-color 300ms ease,
+    box-shadow 300ms ease, fill 300ms ease, stroke 300ms ease;
 }
 
 .dark {

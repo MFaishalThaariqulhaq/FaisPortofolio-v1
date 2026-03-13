@@ -12,7 +12,7 @@ type SocialItem = {
   type: SocialIconType
 }
 
-const CONTACT_EMAIL = "your.email@example.com"
+const CONTACT_EMAIL = "isalthoriq12@gmail.com"
 const CONTACT_IMAGE_SRC = "/contact-placeholder.jpg"
 
 const SOCIAL_LINKS: SocialItem[] = [
@@ -24,27 +24,21 @@ const SOCIAL_LINKS: SocialItem[] = [
   },
   {
     label: "GitHub",
-    href: "https://github.com/your-username",
-    value: "@your-username",
+    href: "https://github.com/MFaishalThaariqulhaq",
+    value: "@MFaishalThaariqulhaq",
     type: "github",
   },
   {
     label: "Instagram",
-    href: "https://instagram.com/your-handle",
-    value: "@your-handle",
+    href: "https://www.instagram.com/faishalthaariq/",
+    value: "@faishalthaariq",
     type: "instagram",
   },
   {
     label: "LinkedIn",
-    href: "https://www.linkedin.com/in/your-profile",
-    value: "your-profile",
+    href: "https://www.linkedin.com/in/m-faishal-thariqulhaq-339709250/",
+    value: "m-faishal-thariqulhaq-339709250",
     type: "linkedin",
-  },
-  {
-    label: "Discord",
-    href: "https://discord.com/users/your-id",
-    value: "your-tag",
-    type: "discord",
   },
 ]
 
