@@ -1,13 +1,35 @@
 "use client"
 
+import Image from "next/image"
 import { motion, useReducedMotion } from "framer-motion"
 import Navbar from "@/components/Navbar"
 
-const MEDIA_ASSETS = {
-  videoSrc: "/miniatur.mp4",
-  videoAlt: "Video profil",
-  videoPoster: "/Miniatur.png",
-}
+const PHOTO_COLUMNS = [
+  {
+    id: "photo-1",
+    src: "/about-photo.jpg",
+    alt: "Faishal collaborating with teammates during a development session",
+    className: "mt-4 md:mt-7",
+    floatOffset: -8,
+    tilt: -1.8,
+  },
+  {
+    id: "photo-2",
+    src: "/about-photo.jpg",
+    alt: "Faishal standing on stage in an event setting",
+    className: "-mt-3 md:-mt-6",
+    floatOffset: -11,
+    tilt: 1.2,
+  },
+  {
+    id: "photo-3",
+    src: "/about-photo.jpg",
+    alt: "Formal portrait of Faishal in a suit",
+    className: "mt-7 md:mt-11",
+    floatOffset: -7,
+    tilt: -1.1,
+  },
+]
 
 export default function AboutPage() {
   const reduceMotion = useReducedMotion()
@@ -36,27 +58,39 @@ export default function AboutPage() {
             initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, delay: 0.08, ease: "easeOut" }}
-            className="w-full max-w-xs md:max-w-sm lg:max-w-xs xl:max-w-sm mx-auto lg:mx-0"
+            className="grid grid-cols-3 gap-3 md:gap-4"
           >
-            <motion.figure
-              initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, delay: 0.12, ease: "easeOut" }}
-              whileHover={reduceMotion ? undefined : { scale: 1.01 }}
-              className="relative aspect-[4/5] w-full max-h-[420px] overflow-hidden rounded-3xl border border-transparent bg-transparent shadow-none"
-            >
-              <video
-                className="h-full w-full object-contain"
-                autoPlay
-                loop
-                muted
-                playsInline
-                poster={MEDIA_ASSETS.videoPoster}
-                aria-label={MEDIA_ASSETS.videoAlt}
+            {PHOTO_COLUMNS.map((photo, index) => (
+              <motion.figure
+                key={photo.id}
+                initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, delay: 0.12 + index * 0.06, ease: "easeOut" }}
+                whileHover={reduceMotion ? undefined : { scaleX: 1.055, y: -8, rotate: 0, zIndex: 8 }}
+                className={`relative aspect-[3/4] overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[0_20px_45px_rgba(0,0,0,0.24)] ${photo.className}`}
+                style={{ rotate: reduceMotion ? 0 : photo.tilt }}
               >
-                <source src={MEDIA_ASSETS.videoSrc} type="video/mp4" />
-              </video>
-            </motion.figure>
+                <motion.div
+                  animate={reduceMotion ? undefined : { y: [0, photo.floatOffset, 0] }}
+                  transition={
+                    reduceMotion
+                      ? undefined
+                      : { duration: 5.2 + index * 0.55, repeat: Infinity, ease: "easeInOut" }
+                  }
+                  className="relative h-full w-full"
+                >
+                  <Image
+                    src={photo.src}
+                    alt={photo.alt}
+                    fill
+                    sizes="(min-width: 1024px) 20vw, (min-width: 768px) 28vw, 30vw"
+                    className="object-cover transition duration-500 ease-out hover:scale-[1.06]"
+                    priority={index === 0}
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-white/10" />
+                </motion.div>
+              </motion.figure>
+            ))}
           </motion.div>
           <motion.article
             initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 16 }}
@@ -66,16 +100,17 @@ export default function AboutPage() {
           >
             <p className="text-xs uppercase tracking-[0.2em] text-[var(--text-muted)]">Pengenalan</p>
             <h2 className="mt-3 text-[clamp(1.5rem,4vw,2.4rem)] font-semibold leading-tight tracking-tight">
-              Nama Lengkap Anda
+              M. Faishal Thariqulhaq
             </h2>
             <p className="mt-5 max-w-xl text-sm leading-relaxed text-[var(--text-secondary)] md:text-base">
-              Perkenalkan, saya seorang profesional di bidang teknologi yang fokus membangun produk digital dari ide
-              hingga rilis. Saat ini saya banyak bekerja pada web apps modern, API yang rapi, dan pengalaman pengguna
-              yang sederhana.
+              Product-driven Fullstack Developer with expertise in Laravel and TypeScript, building modern web
+              systems that balance performance, scalability, and maintainability. I work across backend architectures
+              and interactive frontend applications while expanding into mobile development with Kotlin and AI-powered
+              solutions.
             </p>
             <p className="mt-4 max-w-xl text-sm leading-relaxed text-[var(--text-secondary)] md:text-base">
-              Saya menikmati kolaborasi lintas tim, bereksperimen dengan teknologi baru, dan selalu mencari cara agar
-              produk lebih cepat, stabil, dan mudah digunakan.
+              My goal is to bridge fullstack engineering with intelligent technologies to create adaptable and
+              future-ready digital products.
             </p>
           </motion.article>
           </section>
