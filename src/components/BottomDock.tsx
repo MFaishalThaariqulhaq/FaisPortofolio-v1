@@ -87,13 +87,7 @@ export default function BottomDock() {
         }}
         className="relative flex items-end gap-6 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-elev)]/80 px-5 py-3.5 shadow-2xl backdrop-blur-xl md:gap-12 md:px-11 md:py-5"
       >
-        <motion.div
-          aria-hidden="true"
-          style={{ background: lampBg }}
-          animate={{ opacity: isHoveringDock && !isMobile ? 1 : 0 }}
-          transition={{ duration: 0.2, ease: "easeOut" }}
-          className="pointer-events-none absolute inset-0"
-        />
+        {/* Hover lamp disabled */}
         {ITEMS.map((item) => (
           <DockItem
             key={item.id}
@@ -144,7 +138,7 @@ function DockItem({
     mass: 0.2,
   })
   const iconOpacity = useTransform(scale, [1, 1.8], [0.84, 1])
-  const glowOpacity = useSpring(useTransform(distance, [-140, 0, 140], [0.12, isMobile ? 0.2 : 0.65, 0.12]), {
+  const glowOpacity = useSpring(useTransform(distance, [-140, 0, 140], [0.06, isMobile ? 0.12 : 0.32, 0.06]), {
     stiffness: 260,
     damping: 24,
     mass: 0.25,
@@ -164,7 +158,7 @@ function DockItem({
     >
       <motion.span
         aria-hidden="true"
-        style={{ opacity: glowOpacity }}
+        style={{ opacity: active ? glowOpacity : 0 }}
         className="pointer-events-none absolute -inset-3 rounded-full bg-[var(--glow-accent)] blur-lg"
       />
       <motion.div

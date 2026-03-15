@@ -196,7 +196,7 @@ export default function AboutSection() {
                   flipped: { opacity: 0, rotateX: 90, y: "50%" },
                 }}
                 transition={{ type: "spring", stiffness: 280, damping: 22 }}
-                className="col-start-1 row-start-1 inline-flex items-center gap-2 rounded-full border border-[var(--border-subtle)] bg-[var(--accent-2)] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_28px_rgba(0,0,0,0.2)]"
+                className="col-start-1 row-start-1 inline-flex items-center gap-2 rounded-full border border-[var(--border-subtle)] bg-[var(--text-primary)]/85 px-5 py-2.5 text-sm font-semibold text-[var(--bg-page)] shadow-[0_10px_28px_rgba(0,0,0,0.2)]"
               >
                 <span>About Me</span>
                 <span aria-hidden="true">-&gt;</span>
@@ -207,7 +207,7 @@ export default function AboutSection() {
                   flipped: { opacity: 1, rotateX: 0, y: "0%" },
                 }}
                 transition={{ type: "spring", stiffness: 280, damping: 22 }}
-                className="col-start-1 row-start-1 inline-flex items-center gap-2 rounded-full border border-[var(--border-subtle)] bg-[var(--accent-2)]/90 px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_28px_rgba(0,0,0,0.2)]"
+                className="col-start-1 row-start-1 inline-flex items-center gap-2 rounded-full border border-[var(--border-subtle)] bg-[var(--text-primary)] px-5 py-2.5 text-sm font-semibold text-[var(--bg-page)] shadow-[0_10px_28px_rgba(0,0,0,0.2)]"
               >
                 <span>About Me</span>
                 <span aria-hidden="true">-&gt;</span>
